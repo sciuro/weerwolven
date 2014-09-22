@@ -1,0 +1,11 @@
+# Ignore the configfile
+botconfig.py
+
+# Ignore the errorlog
+errors.log
+
+# Ignore the database
+data.sqlite3
+
+# Ignore the python files
+**/*.pyc
