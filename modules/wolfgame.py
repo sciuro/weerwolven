@@ -383,16 +383,16 @@ def join(cli, nick, chann_, rest):
                       'Tik "{1}join" voor deelname. Tik "{1}start" Om het spel te starten. '+
                       'Tik "{1}wait" om de tijd voor deelname te verlengen.').format(nick, botconfig.CMD_CHAR))
     elif nick in pl:
-        cli.notice(nick, "You're already playing!")
+        cli.notice(nick, "Je speelt al mee!")
     elif len(pl) >= var.MAX_PLAYERS:
-        cli.notice(nick, "Too many players!  Try again next time.")
+        cli.notice(nick, "Maximaal aantal spelers bereikt!  Probeer het later nog eens.")
     elif var.PHASE != "join":
-        cli.notice(nick, "Sorry but the game is already running.  Try again next time.")
+        cli.notice(nick, "Sorry het spel is al bezig.  Probeer het later nog eens.")
     else:
     
         cli.mode(chan, "+v", nick)
-        var.ROLES["person"].append(nick)
-        cli.msg(chan, '\u0002{0}\u0002 has joined the game.'.format(nick))
+        var.ROLES["persoon"].append(nick)
+        cli.msg(chan, '\u0002{0}\u0002 doet mee met het spel.'.format(nick))
         
         var.LAST_STATS = None # reset
 
@@ -413,8 +413,8 @@ def fjoin(cli, nick, chann_, rest):
         if a.lower() not in ull:
             if not is_fake_nick(a) or not botconfig.DEBUG_MODE:
                 if not noticed:  # important
-                    cli.msg(chan, nick+(": You may only fjoin "+
-                                        "people who are in this channel."))
+                    cli.msg(chan, nick+(": Je kunt alleen fjoin gebruiken "+
+                                        "personen zijn in dit kanaal."))
                     noticed = True
                 continue
         if not is_fake_nick(a):
@@ -422,14 +422,14 @@ def fjoin(cli, nick, chann_, rest):
         if a != botconfig.NICK:
             join(cli, a.strip(), chan, "")
         else:
-            cli.notice(nick, "No, that won't be allowed.")
+            cli.notice(nick, "Nee, Dat is niet toegestaan.")
 
 @cmd("fleave","fquit","fdel", admin_only=True)
 def fleave(cli, nick, chann_, rest):
     chan = botconfig.CHANNEL
     
     if var.PHASE == "geen":
-        cli.notice(nick, "No game is running.")
+        cli.notice(nick, "Er is geen spel bezig.")
     for a in re.split(" +",rest):
         a = a.strip()
         if not a:
@@ -439,21 +439,21 @@ def fleave(cli, nick, chann_, rest):
         if a.lower() in pll:
             a = pl[pll.index(a.lower())]
         else:
-            cli.msg(chan, nick+": That person is not playing.")
+            cli.msg(chan, nick+": Deze persoon speelt niet mee.")
             return
-        cli.msg(chan, ("\u0002{0}\u0002 is forcing"+
-                       " \u0002{1}\u0002 to leave.").format(nick, a))
-        cli.msg(chan, "Appears (s)he was a \02{0}\02.".format(var.get_role(a)))
-        if var.PHASE in ("dag", "night"):
-            var.LOGGER.logMessage("{0} is forcing {1} to leave.".format(nick, a))
-            var.LOGGER.logMessage("Appears (s)he was a {0}.".format(var.get_role(a)))
+        cli.msg(chan, ("\u0002{0}\u0002 dwingt "+
+                       " \u0002{1}\u0002 het spel te verlaten.").format(nick, a))
+        cli.msg(chan, "Hij/zij was een \02{0}\02.".format(var.get_role(a)))
+        if var.PHASE in ("dag", "nacht"):
+            var.LOGGER.logMessage("{0} dwingt {1} om het spel te verlaten.".format(nick, a))
+            var.LOGGER.logMessage("Hij/zij was een {0}.".format(var.get_role(a)))
         del_player(cli, a)
 
 
 @cmd("fstart", admin_only=True)
 def fstart(cli, nick, chan, rest):
     var.CAN_START_TIME = datetime.now()
-    cli.msg(botconfig.CHANNEL, "\u0002{0}\u0002 has forced the game to start.".format(nick))
+    cli.msg(botconfig.CHANNEL, "\u0002{0}\u0002 heeft het spel gestart.".format(nick))
     start(cli, chan, chan, rest)
 
 
@@ -475,7 +475,7 @@ def on_account(cli, nick, acc):
 def stats(cli, nick, chan, rest):
     """Display the player statistics"""
     if var.PHASE == "geen":
-        cli.notice(nick, "No game is currently running.")
+        cli.notice(nick, "Er is nu geen spel bezig.")
         return
         
     pl = var.list_players()
@@ -484,17 +484,17 @@ def stats(cli, nick, chan, rest):
         # only do this rate-limiting stuff if the person is in game
         if (var.LAST_STATS and
             var.LAST_STATS + timedelta(seconds=var.STATS_RATE_LIMIT) > datetime.now()):
-            cli.msg(chan, nick+": This command is rate-limited.")
+            cli.msg(chan, nick+": Dit commando heeft een gebruikslimiet.")
             return
             
         var.LAST_STATS = datetime.now()
     
     pl.sort(key=lambda x: x.lower())
     if len(pl) > 1:
-        msg = '{0}: \u0002{1}\u0002 players: {2}'.format(nick,
+        msg = '{0}: \u0002{1}\u0002 spelers: {2}'.format(nick,
             len(pl), ", ".join(pl))
     else:
-        msg = '{0}: \u00021\u0002 player: {1}'.format(nick, pl[0])
+        msg = '{0}: \u00021\u0002 speler: {1}'.format(nick, pl[0])
     
     if nick in pl or var.PHASE == "join":
         cli.msg(chan, msg)
@@ -517,17 +517,17 @@ def stats(cli, nick, chan, rest):
     if "wolf" in rs:
         rs.remove("wolf")
         rs.insert(0, "wolf")
-    if "seer" in rs:
-        rs.remove("seer")
-        rs.insert(1, "seer")
-    if "villager" in rs:
-        rs.remove("villager")
-        rs.append("villager")
+    if "ziener" in rs:
+        rs.remove("ziener")
+        rs.insert(1, "ziener")
+    if "burger" in rs:
+        rs.remove("burger")
+        rs.append("burger")
         
         
     firstcount = len(var.ROLES[rs[0]])
     if firstcount > 1 or not firstcount:
-        vb = "are"
+        vb = "zijn"
     else:
         vb = "is"
     for role in rs:
@@ -536,7 +536,7 @@ def stats(cli, nick, chan, rest):
             message.append("\u0002{0}\u0002 {1}".format(count if count else "\u0002no\u0002", var.plural(role)))
         else:
             message.append("\u0002{0}\u0002 {1}".format(count, role))
-    stats_mssg =  "{0}: There {3} {1}, and {2}.".format(nick,
+    stats_mssg =  "{0}: Daar {3} {1}, en {2}.".format(nick,
                                                         ", ".join(message[0:-1]),
                                                         message[-1],
                                                         vb)
@@ -557,11 +557,11 @@ def hurry_up(cli, gameid, change):
     chan = botconfig.CHANNEL
     
     if not change:
-        cli.msg(chan, ("\02As the sun sinks inexorably toward the horizon, turning the lanky pine " +
-                      "trees into fire-edged silhouettes, the villagers are reminded that very little " +
-                      "time remains for them to reach a decision; if darkness falls before they have done " +
-                      "so, the majority will win the vote. No one will be lynched if there " +
-                      "are no votes or an even split.\02"))
+        cli.msg(chan, ("\02Als de zon gestaag naar de horizon zakt, de schaduwen van de " +
+                      "eikenbomen langer worden, worden de burgers er aan herinnerd dat er weinig " +
+                      "tijd over is om tot een besluit te komen; Als de duisternis valt voor de beslissing " +
+                      "is gevallen, de meerderheid van stemmen zal dan winnen. Er zal niemand worden " +
+                      "geëlimineerd als er geen of een gelijk aantal stemmen zijn.\02"))
         if not var.DAY_TIME_LIMIT_CHANGE:
             return
         tmr = threading.Timer(var.DAY_TIME_LIMIT_CHANGE, hurry_up, [cli, var.DAY_ID, True])
@@ -586,15 +586,15 @@ def hurry_up(cli, gameid, change):
         elif len(voters) == maxfound[0]:
             found_dup = True
     if maxfound[0] > 0 and not found_dup:
-        cli.msg(chan, "The sun sets.")
-        var.LOGGER.logMessage("The sun sets.")
+        cli.msg(chan, "De zon gaat onder.")
+        var.LOGGER.logMessage("De zon gaat onder.")
         var.VOTES[maxfound[1]] = [None] * votesneeded
         chk_decision(cli)  # Induce a lynch
     else:
-        cli.msg(chan, ("As the sun sets, the villagers agree to "+
-                      "retire to their beds and wait for morning."))
-        var.LOGGER.logMessage(("As the sun sets, the villagers agree to "+
-                               "retire to their beds and wait for morning."))
+        cli.msg(chan, ("Zodra de zon ondergaat, zijn de burger het er over eens om "+
+                      "naar bed te gaan en te wachten op de morgen."))
+        var.LOGGER.logMessage(("Zodra de zon ondergaat, zijn de burger het er over eens om "+
+                               "naar bed te gaan en te wachten op de morgen."))
         transition_night(cli)
         
 
@@ -610,8 +610,8 @@ def fnight(cli, nick, chan, rest):
 
 @cmd("fday", admin_only=True)
 def fday(cli, nick, chan, rest):
-    if var.PHASE != "night":
-        cli.notice(nick, "It is not nighttime.")
+    if var.PHASE != "nacht":
+        cli.notice(nick, "Het is geen nacht.")
     else:
         transition_day(cli)
 
@@ -638,7 +638,7 @@ def show_votes(cli, nick, chan, rest):
     """Displays the voting statistics."""
     
     if var.PHASE in ("geen", "join"):
-        cli.notice(nick, "No game is currently running.")
+        cli.notice(nick, "Er draait momenteel geen spel.")
         return
     if var.PHASE != "dag":
         cli.notice(nick, "Stemmen kan alleen overdag.")
@@ -646,7 +646,7 @@ def show_votes(cli, nick, chan, rest):
     
     if (var.LAST_VOTES and
         var.LAST_VOTES + timedelta(seconds=var.VOTES_RATE_LIMIT) > datetime.now()):
-        cli.msg(chan, nick+": This command is rate-limited.")
+        cli.msg(chan, nick+": Dit commando heeft een gebruikslimiet.")
         return    
     
     pl = var.list_players()
@@ -655,7 +655,7 @@ def show_votes(cli, nick, chan, rest):
         var.LAST_VOTES = datetime.now()    
         
     if not var.VOTES.values():
-        msg = nick+": No votes yet."
+        msg = nick+": Nog geen stemmen."
         if nick in pl:
             var.LAST_VOTES = None # reset
     else:
@@ -673,9 +673,9 @@ def show_votes(cli, nick, chan, rest):
     pl = var.list_players()
     avail = len(pl) - len(var.WOUNDED)
     votesneeded = avail // 2 + 1
-    the_message = ("{0}: \u0002{1}\u0002 players, \u0002{2}\u0002 votes "+
-                   "required to lynch, \u0002{3}\u0002 players available " +
-                   "to vote.").format(nick, len(pl), votesneeded, avail)
+    the_message = ("{0}: \u0002{1}\u0002 spelers, \u0002{2}\u0002 stemmen "+
+                   "nodig om te elimineren, \u0002{3}\u0002 spelers beschikbaar " +
+                   "om te stemmen.").format(nick, len(pl), votesneeded, avail)
     if nick in pl:
         cli.msg(chan, the_message)
     else:
@@ -684,11 +684,11 @@ def show_votes(cli, nick, chan, rest):
 
 
 def chk_traitor(cli):
-    for tt in var.ROLES["traitor"]:
+    for tt in var.ROLES["verrader"]:
         var.ROLES["wolf"].append(tt)
-        var.ROLES["traitor"].remove(tt)
-        pm(cli, tt, ('HOOOOOOOOOWL. You have become... a wolf!\n'+
-                     'It is up to you to avenge your fallen leaders!'))
+        var.ROLES["verrader"].remove(tt)
+        pm(cli, tt, ('HOOOOOOOOOWL. Jij bent veranderd in een... wolf!\n'+
+                     'Het is aan jou om je gesneuvelde soortgenoten te wreken!'))
 
 
 
