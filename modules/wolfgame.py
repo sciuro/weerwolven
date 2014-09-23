@@ -707,9 +707,9 @@ def stop_game(cli, winner = ""):
     nitemin, nitesec = var.NIGHT_TIMEDELTA.seconds // 60, var.NIGHT_TIMEDELTA.seconds % 60
     total = var.DAY_TIMEDELTA + var.NIGHT_TIMEDELTA
     tmin, tsec = total.seconds // 60, total.seconds % 60
-    gameend_msg = ("Game lasted \u0002{0:0>2}:{1:0>2}\u0002. " +
-                   "\u0002{2:0>2}:{3:0>2}\u0002 was day. " +
-                   "\u0002{4:0>2}:{5:0>2}\u0002 was night. ").format(tmin, tsec,
+    gameend_msg = ("Spel duurde \u0002{0:0>2}:{1:0>2}\u0002. " +
+                   "\u0002{2:0>2}:{3:0>2}\u0002 was dag. " +
+                   "\u0002{4:0>2}:{5:0>2}\u0002 was nacht. ").format(tmin, tsec,
                                                                      daymin, daysec,
                                                                      nitemin, nitesec)
     cli.msg(chan, gameend_msg)
@@ -720,28 +720,28 @@ def stop_game(cli, winner = ""):
 
     roles_msg = []
     
-    var.ORIGINAL_ROLES["cursed villager"] = var.CURSED  # A hack
-    var.ORIGINAL_ROLES["gunner"] = list(var.GUNNERS.keys())
+    var.ORIGINAL_ROLES["vervloekte burger"] = var.CURSED  # A hack
+    var.ORIGINAL_ROLES["kanonnier"] = list(var.GUNNERS.keys())
 
     lroles = list(var.ORIGINAL_ROLES.keys())
     lroles.remove("wolf")
     lroles.insert(0, "wolf")   # picky, howl consistency
     
     for role in lroles:
-        if len(var.ORIGINAL_ROLES[role]) == 0 or role == "villager":
+        if len(var.ORIGINAL_ROLES[role]) == 0 or role == "burger":
             continue
         playersinrole = list(var.ORIGINAL_ROLES[role])
         for i,plr in enumerate(playersinrole):
             if plr.startswith("(dced)"):  # don't care about it here
                 playersinrole[i] = plr[6:]
         if len(playersinrole) == 2:
-            msg = "The {1} were \u0002{0[0]}\u0002 and \u0002{0[1]}\u0002."
+            msg = "De {1} waren \u0002{0[0]}\u0002 en \u0002{0[1]}\u0002."
             roles_msg.append(msg.format(playersinrole, var.plural(role)))
         elif len(playersinrole) == 1:
-            roles_msg.append("The {1} was \u0002{0[0]}\u0002.".format(playersinrole,
+            roles_msg.append("De {1} was \u0002{0[0]}\u0002.".format(playersinrole,
                                                                       role))
         else:
-            msg = "The {2} were {0}, and \u0002{1}\u0002."
+            msg = "De {2} waren {0}, en \u0002{1}\u0002."
             nickslist = ["\u0002"+x+"\u0002" for x in playersinrole[0:-1]]
             roles_msg.append(msg.format(", ".join(nickslist),
                                                   playersinrole[-1],
@@ -772,18 +772,18 @@ def stop_game(cli, winner = ""):
         if acc == "*":
             continue  # not logged in during game start
         # determine if this player's team won
-        if plr in (var.ORIGINAL_ROLES["wolf"] + var.ORIGINAL_ROLES["traitor"] +
-                   var.ORIGINAL_ROLES["werecrow"]):  # the player was wolf-aligned
-            if winner == "wolves":
+        if plr in (var.ORIGINAL_ROLES["wolf"] + var.ORIGINAL_ROLES["verrader"] +
+                   var.ORIGINAL_ROLES["weerkraai"]):  # the player was wolf-aligned
+            if winner == "wolven":
                 won = True
-            elif winner == "villagers":
+            elif winner == "burgers":
                 won = False
             else:
                 break  # abnormal game stop
         else:
-            if winner == "wolves":
+            if winner == "wolven":
                 won = False
-            elif winner == "villagers":
+            elif winner == "burgers":
                 won = True
             else:
                 break
@@ -811,7 +811,7 @@ def chk_win(cli):
     lpl = len(var.list_players())
     
     if lpl == 0:
-        cli.msg(chan, "No more players remaining. Game ended.")
+        cli.msg(chan, "Er zijn geen spelers meer. Het spel is gestopt.")
         reset(cli)
         return True
         
@@ -820,50 +820,50 @@ def chk_win(cli):
         
         
     lwolves = (len(var.ROLES["wolf"])+
-               len(var.ROLES["traitor"])+
-               len(var.ROLES["werecrow"]))
+               len(var.ROLES["verrader"])+
+               len(var.ROLES["weerkraai"]))
     if var.PHASE == "day":
-        lpl -= len([x for x in var.WOUNDED if x not in var.ROLES["traitor"]])
-        lwolves -= len([x for x in var.WOUNDED if x in var.ROLES["traitor"]])
+        lpl -= len([x for x in var.WOUNDED if x not in var.ROLES["verrader"]])
+        lwolves -= len([x for x in var.WOUNDED if x in var.ROLES["verrader"]])
     
     if lwolves == lpl / 2:
-        cli.msg(chan, ("Game over! There are the same number of wolves as "+
-                       "villagers. The wolves eat everyone and win."))
-        var.LOGGER.logMessage(("Game over! There are the same number of wolves as "+
-                               "villagers. The wolves eat everyone, and win."))
+        cli.msg(chan, ("Game over! Er zijn evenveel wolven als burgers."+
+                       "De wolven eten iedereen op en winnen het spel."))
+        var.LOGGER.logMessage(("Game over! Er zijn evenveel wolven als burgers."+
+                               "De wolven eten iedereen op en winnen het spel."))
         village_win = False
-        var.LOGGER.logBare("WOLVES", "WIN")
+        var.LOGGER.logBare("WOLVEN", "WIN")
     elif lwolves > lpl / 2:
-        cli.msg(chan, ("Game over! There are more wolves than "+
-                       "villagers. The wolves eat everyone, and win."))
-        var.LOGGER.logMessage(("Game over! There are more wolves than "+
-                               "villagers. The wolves eat everyone, and win."))
+        cli.msg(chan, ("Game over! Er zijn meer wolven dan burgers."+
+                       "De wolven eten iedereen op en winnen het spel."))
+        var.LOGGER.logMessage(("Game over! Er zijn evenveel wolven als burgers."+
+                               "De wolven eten iedereen op en winnen het spel."))
         village_win = False
-        var.LOGGER.logBare("WOLVES", "WIN")
+        var.LOGGER.logBare("WOLVEN", "WIN")
     elif (not var.ROLES["wolf"] and
-          not var.ROLES["traitor"] and
-          not var.ROLES["werecrow"]):
-        cli.msg(chan, ("Game over! All the wolves are dead! The villagers "+
-                       "chop them up, BBQ them, and have a hearty meal."))
-        var.LOGGER.logMessage(("Game over! All the wolves are dead! The villagers "+
-                               "chop them up, BBQ them, and have a hearty meal."))
+          not var.ROLES["verrader"] and
+          not var.ROLES["weerkraai"]):
+        cli.msg(chan, ("Game over! Alle wolven zijn dood! De burgers "+
+                       "filleren ze, BBQ ze, en hebben een stevige maaltijd."))
+        var.LOGGER.logMessage(("Game over! Alle wolven zijn dood! De burgers "+
+                               "filleren ze, BBQ ze, en hebben een stevige maaltijd."))
         village_win = True
-        var.LOGGER.logBare("VILLAGERS", "WIN")
+        var.LOGGER.logBare("BURGERS", "WIN")
     elif (not var.ROLES["wolf"] and not 
-          var.ROLES["werecrow"] and var.ROLES["traitor"]):
-        for t in var.ROLES["traitor"]:
+          var.ROLES["weerkraai"] and var.ROLES["verrader"]):
+        for t in var.ROLES["verrader"]:
             var.LOGGER.logBare(t, "TRANSFORM")
         chk_traitor(cli)
-        cli.msg(chan, ('\u0002The villagers, during their celebrations, are '+
-                       'frightened as they hear a loud howl. The wolves are '+
-                       'not gone!\u0002'))
-        var.LOGGER.logMessage(('The villagers, during their celebrations, are '+
-                               'frightened as they hear a loud howl. The wolves are '+
-                               'not gone!'))
+        cli.msg(chan, ('\u0002De burgers, tijdens het festijn, zijn bang '+
+                       'ze horen een luide huil. De wolven zijn '+
+                       'niet weg!\u0002'))
+        var.LOGGER.logMessage(('De burgers, tijdens het festijn, zijn bang '+
+                               'ze horen een luide huil. De wolven zijn '+
+                               'niet weg!'))
         return chk_win(cli)
     else:
         return False
-    stop_game(cli, "villagers" if village_win else "wolves")
+    stop_game(cli, "burgers" if village_win else "wolven")
     return True
 
 
