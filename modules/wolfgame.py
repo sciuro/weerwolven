@@ -222,7 +222,7 @@ def restart_program(cli, nick, *rest):
 
 @cmd("ping")
 def pinger(cli, nick, chan, rest):
-    """Pings the channel to get people's attention.  Rate-Limited."""
+    """Pinged het kanaal om de aandacht te krijgen van de gebruikers.  Gebruik gelimiteerd."""
     if (var.LAST_PING and
         var.LAST_PING + timedelta(seconds=var.PING_WAIT) > datetime.now()):
         cli.notice(nick, ("Dit commando heeft een gebruikers limiet. " +
@@ -380,8 +380,8 @@ def join(cli, nick, chann_, rest):
         var.GAME_ID = time.time()
         var.CAN_START_TIME = datetime.now() + timedelta(seconds=var.MINIMUM_WAIT)
         cli.msg(chan, ('\u0002{0}\u0002 heeft Weerwolven van Wakkerdam gestart. '+
-                      'Type "{1}join" to join. Type "{1}start" to start the game. '+
-                      'Type "{1}wait" to increase join wait time.').format(nick, botconfig.CMD_CHAR))
+                      'Tik "{1}join" voor deelname. Tik "{1}start" Om het spel te starten. '+
+                      'Tik "{1}wait" om de tijd voor deelname te verlengen.').format(nick, botconfig.CMD_CHAR))
     elif nick in pl:
         cli.notice(nick, "You're already playing!")
     elif len(pl) >= var.MAX_PLAYERS:
