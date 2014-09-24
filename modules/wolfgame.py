@@ -901,7 +901,7 @@ def del_player(cli, nick, forced_death = False, devoice = True):
             if nick not in var.DEAD:
                 var.DEAD.append(nick)
             ret = not chk_win(cli)
-        if var.PHASE in ("night", "day") and ret:
+        if var.PHASE in ("nacht", "dag") and ret:
             # remove him from variables if he is in there
             for a,b in list(var.KILLS.items()):
                 if b == nick:
@@ -917,7 +917,7 @@ def del_player(cli, nick, forced_death = False, devoice = True):
                         del x[k]
             if nick in var.DISCONNECTED:
                 del var.DISCONNECTED[nick]
-        if var.PHASE == "day" and not forced_death and ret:  # didn't die from lynching
+        if var.PHASE == "dag" and not forced_death and ret:  # didn't die from lynching
             if nick in var.VOTES.keys():
                 del var.VOTES[nick]  #  Delete other people's votes on him
             for k in list(var.VOTES.keys()):
@@ -930,7 +930,7 @@ def del_player(cli, nick, forced_death = False, devoice = True):
             if nick in var.WOUNDED:
                 var.WOUNDED.remove(nick)
             chk_decision(cli)
-        elif var.PHASE == "night" and ret:
+        elif var.PHASE == "nacht" and ret:
             chk_nightdone(cli)
         return ret  
 
@@ -965,27 +965,27 @@ def reaper(cli, gameid):
                 for nck in to_kill:
                     if nck not in var.list_players():
                         continue
-                    cli.msg(chan, ("\u0002{0}\u0002 didn't get out of bed "+
-                        "for a very long time. S/He is declared dead. Appears "+
-                        "(s)he was a \u0002{1}\u0002.").format(nck, var.get_role(nck)))
+                    cli.msg(chan, ("\u0002{0}\u0002 is niet opgestaan "+
+                        "voor een erg lange tijd. Hij/zij is nu dood verklaard. "+
+                        "Hij/zij was een \u0002{1}\u0002.").format(nck, var.get_role(nck)))
                     if not del_player(cli, nck):
                         return
                 pl = var.list_players()
                 x = [a for a in to_warn if a in pl]
                 if x:
-                    cli.msg(chan, ("{0}: \u0002You have been idling for a while. "+
-                                   "Please say something soon or you "+
-                                   "might be declared dead.\u0002").format(", ".join(x)))
+                    cli.msg(chan, ("{0}: \u0002Je Bent Idle voor een tijdje. "+
+                                   "Doe actief mee of je word binnenkort "+
+                                   "dood verklaard.\u0002").format(", ".join(x)))
             for dcedplayer in list(var.DISCONNECTED.keys()):
                 _, timeofdc, what = var.DISCONNECTED[dcedplayer]
                 if what == "quit" and (datetime.now() - timeofdc) > timedelta(seconds=var.QUIT_GRACE_TIME):
-                    cli.msg(chan, ("\02{0}\02 died due to a fatal attack by wild animals. Appears (s)he "+
-                                   "was a \02{1}\02.").format(dcedplayer, var.get_role(dcedplayer)))
+                    cli.msg(chan, ("\02{0}\02 is gestorven door een fatale aanvan van wilde dieren. "+
+                                   "Hij/zij was een \02{1}\02.").format(dcedplayer, var.get_role(dcedplayer)))
                     if not del_player(cli, dcedplayer, devoice = False):
                         return
                 elif what == "part" and (datetime.now() - timeofdc) > timedelta(seconds=var.PART_GRACE_TIME):
-                    cli.msg(chan, ("\02{0}\02 died due to eating poisonous berries.  Appears (s)he was "+
-                                   "a \02{1}\02.").format(dcedplayer, var.get_role(dcedplayer)))
+                    cli.msg(chan, ("\02{0}\02 is gestorven door het eten van giftige bessen. "+
+                                   "Hij/zij was een \02{1}\02.").format(dcedplayer, var.get_role(dcedplayer)))
                     if not del_player(cli, dcedplayer, devoice = False):
                         return
         time.sleep(10)
@@ -1014,7 +1014,7 @@ def on_join(cli, raw_nick, chan, acc="*", rname=""):
                 cli.mode(chan, "+v", nick, nick+"!*@*")
                 del var.DISCONNECTED[nick]
                 
-                cli.msg(chan, "\02{0}\02 has returned to the village.".format(nick))
+                cli.msg(chan, "\02{0}\02 is teruggekeerd naar het dorp.".format(nick))
                 for r,rlist in var.ORIGINAL_ROLES.items():
                     if "(dced)"+nick in rlist:
                         rlist.remove("(dced)"+nick)
@@ -1027,22 +1027,22 @@ def on_join(cli, raw_nick, chan, acc="*", rname=""):
 def goat(cli, nick, chan, rest):
     """Use a goat to interact with anyone in the channel during the day"""
     if var.PHASE in ("geen", "join"):
-        cli.notice(nick, "No game is currently running.")
+        cli.notice(nick, "Er is nu geen spel bezig.")
         return
     elif nick not in var.list_players() or nick in var.DISCONNECTED.keys():
-        cli.notice(nick, "You're not currently playing.")
+        cli.notice(nick, "Je bent nu niet aan het spelen.")
         return
-    if var.PHASE != "day":
-        cli.notice(nick, "You can only do that in the day.")
+    if var.PHASE != "dag":
+        cli.notice(nick, "Dat kun je alleen overdag doen.")
         return
     if var.GOATED:
-        cli.notice(nick, "You can only do that once per day.")
+        cli.notice(nick, "Je kunt dat maar een keer per dag doen.")
         return
     ul = list(var.USERS.keys())
     ull = [x.lower() for x in ul]
     rest = re.split(" +",rest)[0].strip().lower()
     if not rest:
-        cli.notice(nick, "Not enough parameters.")
+        cli.notice(nick, "Niet genoeg parameters.")
         return
     matches = 0
     for player in ull:
@@ -1054,13 +1054,13 @@ def goat(cli, nick, chan, rest):
             matches += 1
     else:
         if matches != 1:
-            pm(cli, nick,"\u0002{0}\u0002 is not in this channel.".format(rest))
+            pm(cli, nick,"\u0002{0}\u0002 is niet in dit kanaal.".format(rest))
             return
     victim = ul[ull.index(victim)]
-    cli.msg(botconfig.CHANNEL, ("\u0002{0}\u0002's goat walks by "+
-                                "and kicks \u0002{1}\u0002.").format(nick,
+    cli.msg(botconfig.CHANNEL, ("\u0002{0}\u0002's geit loopt langs "+
+                                "en schopt \u0002{1}\u0002.").format(nick,
                                                                      victim))
-    var.LOGGER.logMessage("{0}'s goat walks by and kicks {1}.".format(nick, victim))
+    var.LOGGER.logMessage("{0}'s geit loopt langs en schopt {1}.".format(nick, victim))
     var.GOATED = True
     
     
@@ -1086,7 +1086,7 @@ def on_nick(cli, prefix, nick):
         r.append(nick)
         r.remove(prefix)
 
-        if var.PHASE in ("night", "day"):
+        if var.PHASE in ("nacht", "dag"):
             for k,v in var.ORIGINAL_ROLES.items():
                 if prefix in v:
                     var.ORIGINAL_ROLES[k].remove(prefix)
@@ -1122,7 +1122,7 @@ def on_nick(cli, prefix, nick):
                     var.IDLE_WARNED.remove(prefix)
                     var.IDLE_WARNED.append(nick)
 
-        if var.PHASE == "day":
+        if var.PHASE == "dag":
             if prefix in var.WOUNDED:
                 var.WOUNDED.remove(prefix)
                 var.WOUNDED.append(nick)
@@ -1137,7 +1137,7 @@ def on_nick(cli, prefix, nick):
                     v.append(nick)
 
     # Check if he was DC'ed
-    if var.PHASE in ("night", "day"):
+    if var.PHASE in ("nacht", "dag"):
         with var.GRAVEYARD_LOCK:
             if nick in var.DISCONNECTED.keys():
                 clk = var.DISCONNECTED[nick][0]
@@ -1145,8 +1145,8 @@ def on_nick(cli, prefix, nick):
                     cli.mode(chan, "+v", nick, nick+"!*@*")
                     del var.DISCONNECTED[nick]
                     
-                    cli.msg(chan, ("\02{0}\02 has returned to "+
-                                   "the village.").format(nick))
+                    cli.msg(chan, ("\02{0}\02 is terug gekeerd naar "+
+                                   "het dorp.").format(nick))
 
 def leave(cli, what, nick, why=""):
     nick, _, _, cloak = parse_nick(nick)
@@ -1170,17 +1170,17 @@ def leave(cli, what, nick, why=""):
     #  the player who just quit was in the game
     killhim = True
     if what == "part" and (not var.PART_GRACE_TIME or var.PHASE == "join"):
-        msg = ("\02{0}\02 died due to eating poisonous berries. Appears "+
-               "(s)he was a \02{1}\02.").format(nick, var.get_role(nick))
+        msg = ("\02{0}\02 is gestorven door het eten van giftige bessen. "+
+               "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick))
     elif what == "quit" and (not var.QUIT_GRACE_TIME or var.PHASE == "join"):
-        msg = ("\02{0}\02 died due to a fatal attack by wild animals. Appears "+
-               "(s)he was a \02{1}\02.").format(nick, var.get_role(nick))
+        msg = ("\02{0}\02 is gestorven door een fatale aan van van wilde dieren. "+
+               "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick))
     elif what != "kick":
-        msg = "\u0002{0}\u0002 has gone missing.".format(nick)
+        msg = "\u0002{0}\u0002 is vermist.".format(nick)
         killhim = False
     else:
-        msg = ("\02{0}\02 died due to falling off a cliff. Appears "+
-               "(s)he was a \02{1}\02.").format(nick, var.get_role(nick))
+        msg = ("\02{0}\02 is gestorven door van een klif te vallen. "+
+               "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick))
     cli.msg(botconfig.CHANNEL, msg)
     var.LOGGER.logMessage(msg.replace("\02", ""))
     if killhim:
@@ -1198,15 +1198,15 @@ hook("kick")(lambda cli, nick, *rest: leave(cli, "kick", rest[1]))
 def leave_game(cli, nick, chan, rest):
     """Quits the game."""
     if var.PHASE == "geen":
-        cli.notice(nick, "No game is currently running.")
+        cli.notice(nick, "Er is nu geen spel bezig.")
         return
     if nick not in var.list_players() or nick in var.DISCONNECTED.keys():  # not playing
-        cli.notice(nick, "You're not currently playing.")
+        cli.notice(nick, "Je doet nu niet mee aan het spel.")
         return
-    cli.msg(botconfig.CHANNEL, ("\02{0}\02 died of an unknown disease. "+
-                                "S/He was a \02{1}\02.").format(nick, var.get_role(nick)))
-    var.LOGGER.logMessage(("{0} died of an unknown disease. "+
-                           "S/He was a {1}.").format(nick, var.get_role(nick)))
+    cli.msg(botconfig.CHANNEL, ("\02{0}\02 is gestorven aan een onbekende ziekte. "+
+                                "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick)))
+    var.LOGGER.logMessage(("{0} is gestorven aan een onbekende ziekte. "+
+                           "Hij/zij was een {1}.").format(nick, var.get_role(nick)))
     del_player(cli, nick)
 
 
@@ -1223,9 +1223,9 @@ def begin_day(cli):
     var.HVISITED = {}
     var.GUARDED = {}
 
-    msg = ("The villagers must now vote for whom to lynch. "+
-           'Use "{0}lynch <nick>" to cast your vote. {1} votes '+
-           'are required to lynch.').format(botconfig.CMD_CHAR, len(var.list_players()) // 2 + 1)
+    msg = ("De burgers moeten nu stemmen wie ze willen elimineren. "+
+           'gebruik "{0}lynch <nick>" om je stem door te geven. {1} stemmen '+
+           'zijn nodig om iemand te elimineren.').format(botconfig.CMD_CHAR, len(var.list_players()) // 2 + 1)
     cli.msg(chan, msg)
     var.LOGGER.logMessage(msg)
     var.LOGGER.logBare("DAY", "BEGIN")
@@ -1244,10 +1244,10 @@ def night_warn(cli, gameid):
     if var.PHASE == "day":
         return
         
-    cli.msg(botconfig.CHANNEL, ("\02A few villagers awake early and notice it " +
-                                "is still dark outside. " +
-                                "The night is almost over and there are " +
-                                "still whispers heard in the village.\02"))
+    cli.msg(botconfig.CHANNEL, ("\02A De burgers worden wakker en het valt ze op " +
+                                "dat het buiten nogsteeds donker is. " +
+                                "De nacht is bijna voorbij en er zijn " +
+                                "nogsteeds geluiden te horen in het dorp.\02"))
 
 def transition_day(cli, gameid=0):
     if gameid:
@@ -1255,10 +1255,10 @@ def transition_day(cli, gameid=0):
             return
     var.NIGHT_ID = 0
     
-    if var.PHASE == "day":
+    if var.PHASE == "dag":
         return
     
-    var.PHASE = "day"
+    var.PHASE = "dag"
     var.GOATED = False
     chan = botconfig.CHANNEL
     
@@ -1269,9 +1269,9 @@ def transition_day(cli, gameid=0):
     var.DAY_START_TIME = datetime.now()
 
     if (not len(var.SEEN)+len(var.KILLS)+len(var.OBSERVED) # neither seer nor wolf acted
-            and var.FIRST_NIGHT and var.ROLES["seer"] and not botconfig.DEBUG_MODE):
-        cli.msg(botconfig.CHANNEL, "\02The wolves all die of a mysterious plague.\02")
-        for x in var.ROLES["wolf"]+var.ROLES["werecrow"]+var.ROLES["traitor"]:
+            and var.FIRST_NIGHT and var.ROLES["ziener"] and not botconfig.DEBUG_MODE):
+        cli.msg(botconfig.CHANNEL, "\02De wolven zijn allemaal gestorven door een onbekende ziekte.\02")
+        for x in var.ROLES["wolf"]+var.ROLES["weerkraai"]+var.ROLES["verrader"]:
             if not del_player(cli, x, True):
                 return
     
