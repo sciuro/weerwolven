@@ -1305,11 +1305,11 @@ def transition_day(cli, gameid=0):
             dups.append(victim)
             victim = random.choice(dups)
     
-    message = [("Night lasted \u0002{0:0>2}:{1:0>2}\u0002. It is now daytime. "+
-               "The villagers awake, thankful for surviving the night, "+
-               "and search the village... ").format(min, sec)]
+    message = [("Nacht duurde \u0002{0:0>2}:{1:0>2}\u0002. Het is nu dag. "+
+               "De burgers worden wakker, dankbaar dat ze de nacht hebben overleeft, "+
+               "en doorzoeken het dorp... ").format(min, sec)]
     dead = []
-    crowonly = var.ROLES["werecrow"] and not var.ROLES["wolf"]
+    crowonly = var.ROLES["weerkraai"] and not var.ROLES["wolf"]
     if victim:
         var.LOGGER.logBare(victim, "WOLVESVICTIM", *[y for x,y in var.KILLS.items() if x == victim])
     for crow, target in iter(var.OBSERVED.items()):
