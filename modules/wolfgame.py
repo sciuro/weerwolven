@@ -1640,28 +1640,28 @@ def shoot(cli, nick, chann_, rest):
 @pmcmd("kill")
 def kill(cli, nick, rest):
     if var.PHASE in ("geen", "join"):
-        cli.notice(nick, "No game is currently running.")
+        cli.notice(nick, "Er is geen spel bezig.")
         return
     elif nick not in var.list_players() or nick in var.DISCONNECTED.keys():
-        cli.notice(nick, "You're not currently playing.")
+        cli.notice(nick, "Jij doet nu niet mee aan een spel.")
         return
     role = var.get_role(nick)
-    if role == "traitor":
+    if role == "verrader":
         return  # they do this a lot.
-    if role not in ('wolf', 'werecrow'):
-        pm(cli, nick, "Only a wolf may use this command.")
+    if role not in ('wolf', 'kraai'):
+        pm(cli, nick, "Alleen een wolf mag dit commando gebruiken.")
         return
-    if var.PHASE != "night":
-        pm(cli, nick, "You may only kill people at night.")
+    if var.PHASE != "nacht":
+        pm(cli, nick, "Je kunt alleen 's nachts iemand vermoorden.")
         return
     victim = re.split(" +",rest)[0].strip().lower()
     if not victim:
-        pm(cli, nick, "Not enough parameters")
+        pm(cli, nick, "Niet genoeg parameters")
         return
-    if role == "werecrow":  # Check if flying to observe
+    if role == "kraai":  # Check if flying to observe
         if var.OBSERVED.get(nick):
-            pm(cli, nick, ("You have already transformed into a crow; therefore, "+
-                           "you are physically unable to kill a villager."))
+            pm(cli, nick, ("Je bent al in een kraai veranderd; En daarom, "+
+                           "ben je physiek niet in staat burgers te doden."))
             return
     pl = var.list_players()
     pll = [x.lower() for x in pl]
@@ -1676,18 +1676,18 @@ def kill(cli, nick, rest):
             matches += 1
     else:
         if matches != 1:
-            pm(cli, nick, "\u0002{0}\u0002 is currently not playing.".format(victim))
+            pm(cli, nick, "\u0002{0}\u0002 speelt nu niet mee.".format(victim))
             return
     
     victim = pl[pll.index(target)]
     if victim == nick:
-        pm(cli, nick, "Suicide is bad.  Don't do it.")
+        pm(cli, nick, "Zelfmoord is slecht. Doe het niet.")
         return
-    if victim in var.ROLES["wolf"]+var.ROLES["werecrow"]:
-        pm(cli, nick, "You may only kill villagers, not other wolves.")
+    if victim in var.ROLES["wolf"]+var.ROLES["kraai"]:
+        pm(cli, nick, "Je mag allen burgers doden, niet de andere wolven.")
         return
     var.KILLS[nick] = victim
-    pm(cli, nick, "You have selected \u0002{0}\u0002 to be killed.".format(victim))
+    pm(cli, nick, "Jij hebt \u0002{0}\u0002 gekozen om te worden gedood.".format(victim))
     var.LOGGER.logBare(nick, "SELECT", victim)
     chk_nightdone(cli)
 
