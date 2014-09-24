@@ -37,7 +37,7 @@ def generate(fdict, permissions=True, **kwargs):
                         if fnmatch.fnmatch(cloak.lower(), pattern.lower()):
                             for cmdname in s:
                                 if cmdname in botconfig.DENY[pattern]:
-                                    largs[0].notice(nick, "You do not have permission to use that command.")
+                                    largs[0].notice(nick, "Je hebt geen rechten voor dat commando.")
                                     return
                     for pattern in botconfig.ALLOW.keys():
                         if fnmatch.fnmatch(cloak.lower(), pattern.lower()):
@@ -49,14 +49,14 @@ def generate(fdict, permissions=True, **kwargs):
                                   if fnmatch.fnmatch(cloak.lower(), ptn.lower())]:
                         return f(*largs)
                     elif cloak:
-                        largs[0].notice(nick, "You are not the owner.")
+                        largs[0].notice(nick, "Je bent niet de eigenaar.")
                         return
                 if admin_only:
                     if cloak and [ptn for ptn in botconfig.ADMINS+botconfig.OWNERS
                                   if fnmatch.fnmatch(cloak.lower(), ptn.lower())]:
                         return f(*largs)
                     elif cloak:
-                        largs[0].notice(nick, "You are not an admin.")
+                        largs[0].notice(nick, "Je bent geen administrator.")
                         return
                 return f(*largs)
             alias = False
@@ -68,7 +68,7 @@ def generate(fdict, permissions=True, **kwargs):
                     for fn in fdict[x]:
                         if (fn.owner_only != owner_only or
                             fn.admin_only != admin_only):
-                            raise Exception("Command: "+x+" has non-matching protection levels!")
+                            raise Exception("Commando: "+x+" heeft geen passende beschermingsniveau!")
                 fdict[x].append(innerf)
                 if alias:
                     innerf.aliases.append(x)
