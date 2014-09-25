@@ -6,6 +6,7 @@ USERNAME = ""  # for authentication, can be left blank if same as NICK
 OPERUSER = "OPPER user"
 OPERPASS = "OPER password"
 NICK = "mywolfbot"
+NICKPASS = "nickserv password"
 CMD_CHAR = "!"
 CHANGING_HOST_QUIT_MESSAGE = "Changing host"
 
