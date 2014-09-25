@@ -97,9 +97,10 @@ hook = decorators.generate(HOOKS, raw_nick=True, permissions=False)
 def connect_callback(cli):
 
     def prepare_stuff(*args):    
-        cli.send("OPER", botconfig.OPERUSER, botconfig.OPERPASS)
-	#cli.msg("NickServ", "IDENTIFY", botconfig.NICKPASS)
-        cli.ns_identify(botconfig.NICKPASS)
+        if botconfig.OPERUSER and botconfig.OPERPASS:
+            cli.send("OPER", botconfig.OPERUSER, botconfig.OPERPASS)
+        if botconfig.NICKPASS:
+            cli.ns_identify(botconfig.NICKPASS)
         
         cli.join(botconfig.CHANNEL)
         cli.msg("ChanServ", "op "+botconfig.CHANNEL)
