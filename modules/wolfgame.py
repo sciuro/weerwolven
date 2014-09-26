@@ -2155,24 +2155,24 @@ def transition_night(cli):
             continue
         norm_notify = g in var.PLAYERS and var.PLAYERS[g]["cloak"] not in var.SIMPLE_NOTIFY
         if norm_notify:
-            gun_msg =  ("You hold a gun that shoots special silver bullets. You may only use it "+
-                        "during the day. If you shoot a wolf, (s)he will die instantly, but if you "+
-                        "shoot a villager, that villager will likely survive. You get {0}.")
+            gun_msg =  ("Jij hebt een geweer met zilveren kogels. Je kunt hem alleen "+
+                        "overdag gebruiken. Als je op een wolf schiet, hij/zij zal direct sterven, maar schiet "+
+                        "je een burger, de burger zal het waarschijnlijk overleven. Je hebt {0}.")
         else:
-            gun_msg = ("You have a \02gun\02 with {0}.")
+            gun_msg = ("Je hebt een \02geweer\02 met {0}.")
         if var.GUNNERS[g] == 1:
-            gun_msg = gun_msg.format("1 bullet")
+            gun_msg = gun_msg.format("1 kogel")
         elif var.GUNNERS[g] > 1:
-            gun_msg = gun_msg.format(str(var.GUNNERS[g]) + " bullets")
+            gun_msg = gun_msg.format(str(var.GUNNERS[g]) + " kogels")
         else:
             continue
         
         pm(cli, g, gun_msg)
 
-    dmsg = (daydur_msg + "It is now nighttime. All players "+
-                   "check for PMs from me for instructions. "+
-                   "If you did not receive one, simply sit back, "+
-                   "relax, and wait patiently for morning.")
+    dmsg = (daydur_msg + "Het is nu nacht. Alle spelers "+
+                   "controleer je prive bericht voor instructies. "+
+                   "Heb je er geen ontvangen, blijf dan rustig zitten, "+
+                   "relax, en wacht op de morgen die gaat komen.")
     cli.msg(chan, dmsg)
     var.LOGGER.logMessage(dmsg.replace("\02", ""))
     var.LOGGER.logBare("NIGHT", "BEGIN")
@@ -2193,7 +2193,7 @@ def cgamemode(cli, *args):
         modeargs = arg.split("=", 1)
         
         if len(modeargs) < 2:  # no equal sign in the middle of the arg
-            cli.msg(botconfig.CHANNEL, "Invalid syntax.")
+            cli.msg(botconfig.CHANNEL, "ongeldige syntaxis.")
             return False
         
         modeargs[0] = modeargs[0].strip()
@@ -2210,10 +2210,10 @@ def cgamemode(cli, *args):
                         setattr(var, attr, val)
                 return True
             except var.InvalidModeException as e:
-                cli.msg(botconfig.CHANNEL, "Invalid mode: "+str(e))
+                cli.msg(botconfig.CHANNEL, "ongeldige modes: "+str(e))
                 return False
         else:
-            cli.msg(chan, "Mode \u0002{0}\u0002 not found.".format(modeargs[0]))
+            cli.msg(chan, "Modes \u0002{0}\u0002 niet gevonden.".format(modeargs[0]))
 
 
 @cmd("start")
@@ -2229,21 +2229,21 @@ def start(cli, nick, chann_, rest):
         cli.notice(nick, "Er is geen spel bezig.")
         return
     if var.PHASE != "join":
-        cli.notice(nick, "Werewolf is already in play.")
+        cli.notice(nick, "Weerwolven is al bezig.")
         return
     if nick not in villagers and nick != chan:
-        cli.notice(nick, "You're currently not playing.")
+        cli.notice(nick, "Je speelt nu niet mee.")
         return
         
     now = datetime.now()
     var.GAME_START_TIME = now  # Only used for the idler checker
     dur = int((var.CAN_START_TIME - now).total_seconds())
     if dur > 0:
-        cli.msg(chan, "Please wait at least {0} more seconds.".format(dur))
+        cli.msg(chan, "Wacht minimaal nog z'n {0} seconden.".format(dur))
         return
 
     if len(villagers) < 4:
-        cli.msg(chan, "{0}: Four or more players are required to play.".format(nick))
+        cli.msg(chan, "{0}: Er zijn vier of meer spelers nodig voor dit spel.".format(nick))
         return
 
     for pcount in range(len(villagers), 3, -1):
@@ -2254,35 +2254,35 @@ def start(cli, nick, chann_, rest):
     if var.ORIGINAL_SETTINGS:  # Custom settings
         while True:
             wvs = (addroles[var.INDEX_OF_ROLE["wolf"]] +
-                  addroles[var.INDEX_OF_ROLE["traitor"]])
-            if len(villagers) < (sum(addroles) - addroles[var.INDEX_OF_ROLE["gunner"]] -
-                    addroles[var.INDEX_OF_ROLE["cursed villager"]]):
-                cli.msg(chan, "There are too few players in the "+
-                              "game to use the custom roles.")
+                  addroles[var.INDEX_OF_ROLE["verrader"]])
+            if len(villagers) < (sum(addroles) - addroles[var.INDEX_OF_ROLE["kanonnier"]] -
+                    addroles[var.INDEX_OF_ROLE["vervloekte burger"]]):
+                cli.msg(chan, "Er zijn te weinig spelers in het "+
+                              "spel om de standaard regels te gebruiken.")
             elif not wvs:
-                cli.msg(chan, "There has to be at least one wolf!")
+                cli.msg(chan, "Er moet minimaal één wolf zijn!")
             elif wvs > (len(villagers) / 2):
-                cli.msg(chan, "Too many wolves.")
+                cli.msg(chan, "Er zijn te veel wolven.")
             else:
                 break
             reset_settings()
-            cli.msg(chan, "The default settings have been restored.  Please !start again.")
+            cli.msg(chan, "De standaard instellingen zijn teruggezet. Start opnieuw.")
             var.PHASE = "join"
             return
 
             
     if var.ADMIN_TO_PING:
         if "join" in COMMANDS.keys():
-            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "This command has been disabled by an admin.")]
+            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
         if "start" in COMMANDS.keys():
-            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "This command has been disabled by an admin.")]
+            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
 
     var.ROLES = {}
     var.CURSED = []
     var.GUNNERS = {}
     var.WOLF_GUNNERS = {}
 
-    villager_roles = ("gunner", "cursed villager")
+    villager_roles = ("kanonnier", "vervloekte burger")
     for i, count in enumerate(addroles):
         role = var.ROLE_INDICES[i]
         if role in villager_roles:
@@ -2295,40 +2295,39 @@ def start(cli, nick, chann_, rest):
 
     # Now for the villager roles
     # Select cursed (just a villager)
-    if var.ROLES["cursed villager"]:
+    if var.ROLES["vervloekte burger"]:
         possiblecursed = pl[:]
-        for cannotbe in (var.ROLES["wolf"] + var.ROLES["werecrow"] +
-                         var.ROLES["seer"] + var.ROLES["village drunk"]):
+        for cannotbe in (var.ROLES["wolf"] + var.ROLES["weerkraai"] +
+                         var.ROLES["ziener"] + var.ROLES["dronken burger"]):
                                               # traitor can be cursed
             possiblecursed.remove(cannotbe)
         
-        var.CURSED = random.sample(possiblecursed, len(var.ROLES["cursed villager"]))
-    del var.ROLES["cursed villager"]
+        var.CURSED = random.sample(possiblecursed, len(var.ROLES["vervloekte burger"]))
+    del var.ROLES["vervloekte burger"]
     
     # Select gunner (also a villager)
-    if var.ROLES["gunner"]:
+    if var.ROLES["kanonnier"]:
                    
         possible = pl[:]
-        for cannotbe in (var.ROLES["wolf"] + var.ROLES["werecrow"] +
-                         var.ROLES["traitor"]):
+        for cannotbe in (var.ROLES["wolf"] + var.ROLES["weerkraai"] +
+                         var.ROLES["verrader"]):
             possible.remove(cannotbe)
             
         for csd in var.CURSED:  # cursed cannot be gunner
             if csd in possible:
                 possible.remove(csd)
                 
-        for gnr in random.sample(possible, len(var.ROLES["gunner"])):
-            if gnr in var.ROLES["village drunk"]:
+        for gnr in random.sample(possible, len(var.ROLES["kanonnier"])):
+            if gnr in var.ROLES["dronken burger"]:
                 var.GUNNERS[gnr] = (var.DRUNK_SHOTS_MULTIPLIER * 
                                     math.ceil(var.SHOTS_MULTIPLIER * len(pl)))
             else:
                 var.GUNNERS[gnr] = math.ceil(var.SHOTS_MULTIPLIER * len(pl))
-    del var.ROLES["gunner"]
+    del var.ROLES["kanonnier"]
 
-    var.ROLES["villager"] = villagers
+    var.ROLES["burger"] = villagers
 
-    cli.msg(chan, ("{0}: Welcome to Werewolf, the popular rechercheur/social party "+
-                   "game (a theme of Mafia).").format(", ".join(pl)))
+    cli.msg(chan, ("{0}: Welkom bij Weerwolven van Wakkerdam.").format(", ".join(pl)))
     cli.mode(chan, "+m")
 
     var.ORIGINAL_ROLES = copy.deepcopy(var.ROLES)  # Make a copy
@@ -2338,7 +2337,7 @@ def start(cli, nick, chann_, rest):
     var.DAY_START_TIME = None
     var.NIGHT_START_TIME = None
     
-    var.LOGGER.log("Game Start")
+    var.LOGGER.log("Spel Start")
     var.LOGGER.logBare("GAME", "BEGIN", nick)
     var.LOGGER.logBare(str(len(pl)), "PLAYERCOUNT")
     
@@ -2358,14 +2357,14 @@ def start(cli, nick, chann_, rest):
             var.LOGGER.logBare(plr, "ROLE", rol)
     
     if var.CURSED:
-        var.LOGGER.log("Cursed Villagers: "+", ".join(var.CURSED))
+        var.LOGGER.log("Vervloekten: "+", ".join(var.CURSED))
         
         for plr in var.CURSED:
-            var.LOGGER.logBare(plr+" ROLE cursed villager")
+            var.LOGGER.logBare(plr+" ROLE vevloekte burger")
     if var.GUNNERS:
-        var.LOGGER.log("Villagers With Bullets: "+", ".join([x+"("+str(y)+")" for x,y in var.GUNNERS.items()]))
+        var.LOGGER.log("Burgers met kogels: "+", ".join([x+"("+str(y)+")" for x,y in var.GUNNERS.items()]))
         for plr in var.GUNNERS:
-            var.LOGGER.logBare(plr, "ROLE gunner")
+            var.LOGGER.logBare(plr, "ROLE kanonnier")
     
     var.LOGGER.log("***")        
         
@@ -2408,10 +2407,10 @@ def wait(cli, nick, chann_, rest):
         cli.notice(nick, "Werewolf is already in play.")
         return
     if nick not in pl:
-        cli.notice(nick, "You're currently not playing.")
+        cli.notice(nick, "Je speelt nu niet mee.")
         return
     if var.WAITED >= var.MAXIMUM_WAITED:
-        cli.msg(chan, "Limit has already been reached for extending the wait time.")
+        cli.msg(chan, "Het maximale aantal keren voor het uitbreiden van de wacht tijd is bereikt.")
         return
 
     now = datetime.now()
@@ -2420,8 +2419,8 @@ def wait(cli, nick, chann_, rest):
     else:
         var.CAN_START_TIME += timedelta(seconds=var.EXTRA_WAIT)
     var.WAITED += 1
-    cli.msg(chan, ("\u0002{0}\u0002 increased the wait time by "+
-                  "{1} seconds.").format(nick, var.EXTRA_WAIT))
+    cli.msg(chan, ("\u0002{0}\u0002 heeft de wachttijd verlengt met "+
+                  "{1} seconden.").format(nick, var.EXTRA_WAIT))
 
 
 
@@ -2437,7 +2436,7 @@ def fwait(cli, nick, chann_, rest):
         cli.notice(nick, "Er is geen spel bezig.")
         return
     if var.PHASE != "join":
-        cli.notice(nick, "Werewolf is already in play.")
+        cli.notice(nick, "Weerwolven is al bezig.")
         return
 
     rest = re.split(" +", rest.strip(), 1)[0]
@@ -2445,7 +2444,7 @@ def fwait(cli, nick, chann_, rest):
         if len(rest) < 4:
             extra = int(rest)
         else:
-            cli.msg(chan, "{0}: We don't have all day!".format(nick))
+            cli.msg(chan, "{0}: We hebben niet de hele dag!".format(nick))
             return
     else:
         extra = var.EXTRA_WAIT
@@ -2456,8 +2455,8 @@ def fwait(cli, nick, chann_, rest):
     else:
         var.CAN_START_TIME += timedelta(seconds=extra)
     var.WAITED += 1
-    cli.msg(chan, ("\u0002{0}\u0002 forcibly increased the wait time by "+
-                  "{1} seconds.").format(nick, extra))
+    cli.msg(chan, ("\u0002{0}\u0002 heeft de wachttijd geforceerd verlengt met "+
+                  "{1} seconden.").format(nick, extra))
 
 
 @cmd("fstop",admin_only=True)
@@ -2465,8 +2464,8 @@ def reset_game(cli, nick, chan, rest):
     if var.PHASE == "geen":
         cli.notice(nick, "Er is geen spel bezig.")
         return
-    cli.msg(botconfig.CHANNEL, "\u0002{0}\u0002 has forced the game to stop.".format(nick))
-    var.LOGGER.logMessage("{0} has forced the game to stop.".format(nick))
+    cli.msg(botconfig.CHANNEL, "\u0002{0}\u0002 heeft het spel geforceerd gestopt.".format(nick))
+    var.LOGGER.logMessage("{0} heeft het spel geforceerd gestopt.".format(nick))
     if var.PHASE != "join":
         stop_game(cli)
     else:
@@ -2480,7 +2479,7 @@ def pm_rules(cli, nick, rest):
 @cmd("rules")
 def show_rules(cli, nick, chan, rest):
     """Displays the rules"""
-    if var.PHASE in ("day", "night") and nick not in var.list_players():
+    if var.PHASE in ("dag", "nacht") and nick not in var.list_players():
         cli.notice(nick, var.RULES)
         return
     cli.msg(botconfig.CHANNEL, var.RULES)
@@ -2519,9 +2518,9 @@ def get_help(cli, rnick, rest):
                     continue
         else:
             if not found:
-                pm(cli, nick, "Command not found.")
+                pm(cli, nick, "Commando niet gevonden.")
             else:
-                pm(cli, nick, "Documentation for this command is not available.")
+                pm(cli, nick, "Er is geen hulp bij dit commando beschikbaar.")
             return
     # if command was not found, or if no command was given:
     for name, fn in COMMANDS.items():
@@ -2566,11 +2565,11 @@ def show_admins(cli, nick, chan, rest):
     
     if (var.LAST_ADMINS and
         var.LAST_ADMINS + timedelta(seconds=var.ADMINS_RATE_LIMIT) > datetime.now()):
-        cli.notice(nick, ("This command is rate-limited. " +
-                          "Please wait a while before using it again."))
+        cli.notice(nick, ("Dit commando heeft een gebruikerslimiet. " +
+                          "Wacht even voor je hem weer gebruikt."))
         return
         
-    if not (var.PHASE in ("day", "night") and nick not in pl):
+    if not (var.PHASE in ("dag", "nacht") and nick not in pl):
         var.LAST_ADMINS = datetime.now()
     
     if var.ADMIN_PINGING:
@@ -2592,10 +2591,10 @@ def show_admins(cli, nick, chan, rest):
             return
         admins.sort(key=lambda x: x.lower())
         
-        if var.PHASE in ("day", "night") and nick not in pl:
-            cli.notice(nick, "Available admins: "+" ".join(admins))
+        if var.PHASE in ("dag", "nacht") and nick not in pl:
+            cli.notice(nick, "Beschikbare admins: "+" ".join(admins))
         else:
-            cli.msg(chan, "Available admins: "+" ".join(admins))
+            cli.msg(chan, "Beschikbare admins: "+" ".join(admins))
 
         decorators.unhook(HOOKS, 4)
         var.ADMIN_PINGING = False
@@ -2608,13 +2607,13 @@ def show_admins(cli, nick, chan, rest):
 def coin(cli, nick, chan, rest):
     """It's a bad idea to base any decisions on this command."""
     
-    if var.PHASE in ("day", "night") and nick not in var.list_players():
-        cli.notice(nick, "You may not use this command right now.")
+    if var.PHASE in ("dag", "nacht") and nick not in var.list_players():
+        cli.notice(nick, "Je kunt dit commando nu niet gebruiken.")
         return
     
-    cli.msg(chan, "\2{0}\2 tosses a coin into the air...".format(nick))
-    var.LOGGER.logMessage("{0} tosses a coin into the air...".format(nick))
-    cmsg = "The coin lands on \2{0}\2.".format("heads" if random.random() < 0.5 else "tails")
+    cli.msg(chan, "\2{0}\2 gooit een munt in de lucht...".format(nick))
+    var.LOGGER.logMessage("{0} gooit een munt in de lucht...".format(nick))
+    cmsg = "De munt land op \2{0}\2.".format("kop" if random.random() < 0.5 else "munt")
     cli.msg(chan, cmsg)
     var.LOGGER.logMessage(cmsg)
     
@@ -2637,15 +2636,15 @@ def aftergame(cli, rawnick, rest):
             for fn in COMMANDS[cmd]:
                 fn(cli, rawnick, botconfig.CHANNEL, " ".join(rst))
     else:
-        cli.notice(nick, "That command was not found.")
+        cli.notice(nick, "Dit commando is niet gevonden.")
         return
         
     if var.PHASE == "geen":
         do_action()
         return
     
-    cli.msg(chan, ("The command \02{0}\02 has been scheduled to run "+
-                  "after this game by \02{1}\02.").format(cmd, nick))
+    cli.msg(chan, ("Het commando \02{0}\02 is ingeplanned om uitgevoerd te worden "+
+                  "na dit spel door \02{1}\02.").format(cmd, nick))
     var.AFTER_FLASTGAME = do_action
 
     
@@ -2653,7 +2652,7 @@ def aftergame(cli, rawnick, rest):
 @cmd("faftergame", admin_only=True, raw_nick=True)
 def _faftergame(cli, nick, chan, rest):
     if not rest.strip():
-        cli.notice(parse_nick(nick)[0], "Incorrect syntax for this command.")
+        cli.notice(parse_nick(nick)[0], "Onjuiste syntax  voor dit commando.")
         return
     aftergame(cli, nick, rest)
         
@@ -2673,11 +2672,11 @@ def flastgame(cli, nick, rest):
     chan = botconfig.CHANNEL
     if var.PHASE != "join":
         if "join" in COMMANDS.keys():
-            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "This command has been disabled by an admin.")]
+            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
         if "start" in COMMANDS.keys():
-            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "This command has been disabled by an admin.")]
+            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
         
-    cli.msg(chan, "Starting a new game has now been disabled by \02{0}\02.".format(nick))
+    cli.msg(chan, "Een nieuw spel starten is uitgeschakeld door \02{0}\02.".format(nick))
     var.ADMIN_TO_PING = nick
     
     if rest.strip():
@@ -2733,9 +2732,9 @@ if botconfig.DEBUG_MODE or botconfig.ALLOWED_NORMAL_MODE_COMMANDS:
     def revroles(cli, nick, chan, rest):
         if var.PHASE != "geen":
             cli.msg(chan, str(var.ROLES))
-        if var.PHASE in ('night','day'):
-            cli.msg(chan, "Cursed: "+str(var.CURSED))
-            cli.msg(chan, "Gunners: "+str(list(var.GUNNERS.keys())))
+        if var.PHASE in ('nacht','dag'):
+            cli.msg(chan, "Vervloekt: "+str(var.CURSED))
+            cli.msg(chan, "Kanonnier: "+str(list(var.GUNNERS.keys())))
         
         
     @cmd("fgame", admin_only=True)
@@ -2745,16 +2744,16 @@ if botconfig.DEBUG_MODE or botconfig.ALLOWED_NORMAL_MODE_COMMANDS:
             cli.notice(nick, "Er is geen spel bezig.")
             return
         if var.PHASE != "join":
-            cli.notice(nick, "Werewolf is already in play.")
+            cli.notice(nick, "Weerwolven is al bezig.")
             return
         if nick not in pl:
-            cli.notice(nick, "You're currently not playing.")
+            cli.notice(nick, "Jij speelt nu niet mee.")
             return
         rest = rest.strip().lower()
         if rest:
             if cgamemode(cli, *re.split(" +",rest)):
-                cli.msg(chan, ("\u0002{0}\u0002 has changed the "+
-                                "game settings successfully.").format(nick))
+                cli.msg(chan, ("\u0002{0}\u0002 heeft de spel "+
+                                "instellingen succesvol aangepast.").format(nick))
     
     def fgame_help(args = ""):
         args = args.strip()
@@ -2773,17 +2772,17 @@ if botconfig.DEBUG_MODE or botconfig.ALLOWED_NORMAL_MODE_COMMANDS:
     def forcepm(cli, nick, chan, rest):
         rst = re.split(" +",rest)
         if len(rst) < 2:
-            cli.msg(chan, "The syntax is incorrect.")
+            cli.msg(chan, "De syntax is incorrect.")
             return
         who = rst.pop(0).strip()
         if not who or who == botconfig.NICK:
-            cli.msg(chan, "That won't work.")
+            cli.msg(chan, "Dat werkt niet.")
             return
         if not is_fake_nick(who):
             ul = list(var.USERS.keys())
             ull = [u.lower() for u in ul]
             if who.lower() not in ull:
-                cli.msg(chan, "This can only be done on fake nicks.")
+                cli.msg(chan, "Dit kan alleen gedaan worden op niet bestaande nicknames.")
                 return
             else:
                 who = ul[ull.index(who.lower())]
