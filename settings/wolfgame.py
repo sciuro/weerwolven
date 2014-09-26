@@ -29,10 +29,10 @@ MANSLAUGHTER_CHANCE =       1/5  # ACCIDENTAL HEADSHOT (FATAL)
 
 GUNNER_KILLS_WOLF_AT_NIGHT_CHANCE = 0
 GUARDIAN_ANGEL_DIES_CHANCE = 1/2
-DETECTIVE_REVEALED_CHANCE = 2/5
+rechercheur_REVEALED_CHANCE = 2/5
 
 #################################################################################################################
-#   ROLE INDEX:   PLAYERS   SEER    WOLF   CURSED   DRUNK   HARLOT  TRAITOR  GUNNER   CROW    ANGEL DETECTIVE  ##
+#   ROLE INDEX:   PLAYERS   SEER    WOLF   CURSED   DRUNK   HARLOT  TRAITOR  GUNNER   CROW    ANGEL rechercheur  ##
 #################################################################################################################
 ROLES_GUIDE = {    4    : (   1   ,   1   ,   0   ,   0   ,   0   ,    0   ,   0   ,   0    ,   0   ,   0   ), ##
                    6    : (   1   ,   1   ,   1   ,   1   ,   0   ,    0   ,   0   ,   0    ,   0   ,   0   ), ##
@@ -55,12 +55,12 @@ ROLE_INDICES = {0 : "ziener",
                 1 : "wolf",
                 2 : "vervloekte burger",
                 3 : "dronken burger",
-                4 : "pizzabezorger",
+                4 : "onschuldige meisje",
                 5 : "verrader",
                 6 : "kanonnier",
-                7 : "kraai",
+                7 : "weerkraai",
                 8 : "bescherm engel",
-                9 : "detective"}
+                9 : "rechercheur"}
                 
 INDEX_OF_ROLE = dict((v,k) for k,v in ROLE_INDICES.items())
 
@@ -129,12 +129,12 @@ CHANGEABLE_ROLES = { "zieners"  : INDEX_OF_ROLE["ziener"],
                      "wolven" : INDEX_OF_ROLE["wolf"],
                      "vervloekten" : INDEX_OF_ROLE["vervloekte burger"],
                     "dronkaarts"  : INDEX_OF_ROLE["dronken burger"],
-                   "pizzabezorgers"  : INDEX_OF_ROLE["pizzabezorger"],
+                   "onschuldige meisjes"  : INDEX_OF_ROLE["onschuldige meisje"],
                   "verraders"  : INDEX_OF_ROLE["verrader"],
                    "kanonniers"  : INDEX_OF_ROLE["kanonnier"],
-                 "kraaien"  : INDEX_OF_ROLE["kraai"],
+                 "weerkraaien"  : INDEX_OF_ROLE["weerkraai"],
                  "engelen"     : INDEX_OF_ROLE["bescherm engel"],
-                 "detectives" : INDEX_OF_ROLE["detective"]}
+                 "rechercheurs" : INDEX_OF_ROLE["rechercheur"]}
     
 
 
