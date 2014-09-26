@@ -29,10 +29,10 @@ MANSLAUGHTER_CHANCE =       1/5  # ACCIDENTAL HEADSHOT (FATAL)
 
 GUNNER_KILLS_WOLF_AT_NIGHT_CHANCE = 0
 GUARDIAN_ANGEL_DIES_CHANCE = 1/2
-DETECTIVE_REVEALED_CHANCE = 2/5
+rechercheur_REVEALED_CHANCE = 2/5
 
 #################################################################################################################
-#   ROLE INDEX:   PLAYERS   SEER    WOLF   CURSED   DRUNK   HARLOT  TRAITOR  GUNNER   CROW    ANGEL DETECTIVE  ##
+#   ROLE INDEX:   PLAYERS   SEER    WOLF   CURSED   DRUNK   HARLOT  TRAITOR  GUNNER   CROW    ANGEL rechercheur  ##
 #################################################################################################################
 ROLES_GUIDE = {    4    : (   1   ,   1   ,   0   ,   0   ,   0   ,    0   ,   0   ,   0    ,   0   ,   0   ), ##
                    6    : (   1   ,   1   ,   1   ,   1   ,   0   ,    0   ,   0   ,   0    ,   0   ,   0   ), ##
@@ -51,35 +51,35 @@ GAME_MODES = {}
 AWAY = []  # cloaks of people who are away.
 SIMPLE_NOTIFY = []  # cloaks of people who !simple, who want everything /notice'd
 
-ROLE_INDICES = {0 : "seer",
+ROLE_INDICES = {0 : "ziener",
                 1 : "wolf",
-                2 : "cursed villager",
-                3 : "village drunk",
-                4 : "harlot",
-                5 : "traitor",
-                6 : "gunner",
-                7 : "werecrow",
-                8 : "guardian angel",
-                9 : "detective"}
+                2 : "vervloekte burger",
+                3 : "dronken burger",
+                4 : "onschuldige meisje",
+                5 : "verrader",
+                6 : "kanonnier",
+                7 : "weerkraai",
+                8 : "bescherm engel",
+                9 : "rechercheur"}
                 
 INDEX_OF_ROLE = dict((v,k) for k,v in ROLE_INDICES.items())
 
 
-NO_VICTIMS_MESSAGES = ("The body of a young penguin pet is found.",
-                       "A pool of blood and wolf paw prints are found.",
-                       "Traces of wolf fur are found.")
-LYNCH_MESSAGES = ("The villagers, after much debate, finally decide on lynching \u0002{0}\u0002, who turned out to be... a \u0002{1}\u0002.",
-                  "Under a lot of noise, the pitchfork-bearing villagers lynch \u0002{0}\u0002, who turned out to be... a \u0002{1}\u0002.",
-                  "The mob drags a protesting \u0002{0}\u0002 to the hanging tree. S/He succumbs to the will of the horde, and is hanged. It is discovered (s)he was a \u0002{1}\u0002.",
-                  "Resigned to his/her fate, \u0002{0}\u0002 is led to the gallows. After death, it is discovered (s)he was a \u0002{1}\u0002.")
+NO_VICTIMS_MESSAGES = ("Het lichaam van een jonge huisdier is gevonden.",
+                       "Een plas van bloed en wolfpoot afdrukken zijn gevonden.",
+                       "Een pluk van wolvenhaar is gevonden.")
+LYNCH_MESSAGES = ("De burgers hebben, na lang overleg, besloten te elmineren \u0002{0}\u0002, hij/zij was een... \u0002{1}\u0002.",
+                  "Onder veel lawaai, de woedende burgers elimineren \u0002{0}\u0002, hij/zij was een... \u0002{1}\u0002.",
+                  "De menigte sleept een protesterende \u0002{0}\u0002 naar de galg. Hij/zij bezwijkt aan de wil van de groep, en wordt opgehangen. Hij/zij was een \u0002{1}\u0002.",
+                  "Verslagen door zijn/haar lot, is \u0002{0}\u0002 naar de galg geleid. Na de dood bleek hij/zij een \u0002{1}\u0002 te zijn.")
 
 import botconfig
 
-RULES = (botconfig.CHANNEL + " channel rules: 1) Be nice to others. 2) Do not share information "+
-         "after death. 3) No bots allowed. 4) Do not play with clones.\n"+
-         "5) Do not quit unless you need to leave. 6) No swearing and keep it "+
-         "family-friendly. 7) Do not paste PM's from the bot during the game. "+
-         "8) Use common sense. 9) Waiting for timeouts is discouraged.")                                              
+RULES = (botconfig.CHANNEL + " Kanaal regels: 1) Wees aardig voor elkaar. 2) Deel geen spel infomatie "+
+         "na je dood. 3) Bots zijn niet toegestaan. 4) Speel niet met clones van jezelf.\n"+
+         "5) Stop niet met spelen, tenzij het niet anders kan. 6) Niet vloeken en hou het leuk "+
+         "voor iedereen. 7) Sla geen Prive berichten over van het spel tijdens het spel. "+
+         "8) Gebruik je gezonde verstand. 9) Wachten op timeouts is niet leuk.")                                              
 
 # Other settings:
 START_WITH_DAY = False
@@ -91,8 +91,8 @@ PING_IN = []  # cloaks of users who have opted in for ping
 is_role = lambda plyr, rol: rol in ROLES and plyr in ROLES[rol]
 
 def plural(role):
-    if role == "wolf": return "wolves"
-    elif role == "person": return "people"
+    if role == "wolf": return "wolven"
+    elif role == "persoon": return "personen"
     else: return role + "s"
     
 def list_players():
@@ -125,16 +125,16 @@ def game_mode(name):
     return decor
 
     
-CHANGEABLE_ROLES = { "seers"  : INDEX_OF_ROLE["seer"],
-                     "wolves" : INDEX_OF_ROLE["wolf"],
-                     "cursed" : INDEX_OF_ROLE["cursed villager"],
-                    "drunks"  : INDEX_OF_ROLE["village drunk"],
-                   "harlots"  : INDEX_OF_ROLE["harlot"],
-                  "traitors"  : INDEX_OF_ROLE["traitor"],
-                   "gunners"  : INDEX_OF_ROLE["gunner"],
-                 "werecrows"  : INDEX_OF_ROLE["werecrow"],
-                 "angels"     : INDEX_OF_ROLE["guardian angel"],
-                 "detectives" : INDEX_OF_ROLE["detective"]}
+CHANGEABLE_ROLES = { "zieners"  : INDEX_OF_ROLE["ziener"],
+                     "wolven" : INDEX_OF_ROLE["wolf"],
+                     "vervloekten" : INDEX_OF_ROLE["vervloekte burger"],
+                    "dronkaarts"  : INDEX_OF_ROLE["dronken burger"],
+                   "onschuldige meisjes"  : INDEX_OF_ROLE["onschuldige meisje"],
+                  "verraders"  : INDEX_OF_ROLE["verrader"],
+                   "kanonniers"  : INDEX_OF_ROLE["kanonnier"],
+                 "weerkraaien"  : INDEX_OF_ROLE["weerkraai"],
+                 "engelen"     : INDEX_OF_ROLE["bescherm engel"],
+                 "rechercheurs" : INDEX_OF_ROLE["rechercheur"]}
     
 
 
@@ -161,8 +161,8 @@ class ChangedRolesMode(object):
                 try:
                     lx[CHANGEABLE_ROLES[role.lower()]] = num
                 except KeyError:
-                    raise InvalidModeException(("The role \u0002{0}\u0002 "+
-                                                "is not valid.").format(role))
+                    raise InvalidModeException(("De rol \u0002{0}\u0002 "+
+                                                "is niet geldig.").format(role))
             except ValueError:
                 raise InvalidModeException("A bad value was used in mode roles.")
         for k in ROLES_GUIDE.keys():
@@ -196,7 +196,7 @@ with conn:
     c.execute('DROP TABLE IF EXISTS roles')
     c.execute('CREATE TABLE roles (id INTEGER PRIMARY KEY AUTOINCREMENT, role TEXT)')
 
-    for x in ["villager"]+list(ROLE_INDICES.values()):
+    for x in ["burger"]+list(ROLE_INDICES.values()):
         c.execute("INSERT OR REPLACE INTO roles (role) VALUES (?)", (x,))
         
         

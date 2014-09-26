@@ -23,7 +23,7 @@ pmcmd = decorators.generate(PM_COMMANDS)
 hook = decorators.generate(HOOKS, raw_nick=True, permissions=False)
 
 def connect_callback(cli):
-    var.PHASE = "none"
+    var.PHASE = "geen"
     var.PLAYERS = []
     
     var.LAST_STATS = None
@@ -33,7 +33,7 @@ def connect_callback(cli):
 def join(cli, nick, chan, rest):
     """Either starts a new game of Werewolf or joins an existing game that has not started yet."""
     
-    if var.PHASE == "none":
+    if var.PHASE == "geen":
     
         cli.mode(chan, "+v", nick, nick+"!*@*")
         var.PLAYERS.append(nick)
@@ -41,19 +41,19 @@ def join(cli, nick, chan, rest):
         var.WAITED = 0
         var.GAME_ID = time.time()
         var.CAN_START_TIME = datetime.now() + timedelta(seconds=var.MINIMUM_WAIT)
-        cli.msg(chan, ('\u0002{0}\u0002 has started a game of Sabotage. '+
-                      'Type "{1}join" to join. Type "{1}start" to start the game. '+
-                      'Type "{1}wait" to increase join wait time.').format(nick, botconfig.CMD_CHAR))
+        cli.msg(chan, ('\u0002{0}\u0002 Heeft een spel gestart. '+
+                      'Tik "{1}join" om mee te spelen. Tik "{1}start" om het spel te starten. '+
+                      'Tik "{1}wait" om nog even te wachten met het staten van het spel.').format(nick, botconfig.CMD_CHAR))
     elif nick in var.PLAYERS:
-        cli.notice(nick, "You're already playing!")
+        cli.notice(nick, "Je speelt al mee!")
     elif len(pl) >= var.MAX_PLAYERS:
-        cli.notice(nick, "Too many players!  Try again next time.")
+        cli.notice(nick, "Het spel zit al vol. Probeer het later nog eens.")
     elif var.PHASE != "join":
-        cli.notice(nick, "Sorry but the game is already running.  Try again next time.")
+        cli.notice(nick, "Sorry het spel is al bezig. Probeer het later nog eens.")
     else:
     
         cli.mode(chan, "+v", nick, nick+"!*@*")
         var.PLAYERS.append(nick)
-        cli.msg(chan, '\u0002{0}\u0002 has joined the game.'.format(nick))
+        cli.msg(chan, '\u0002{0}\u0002 doet mee met het spel.'.format(nick))
         
         var.LAST_STATS = None # reset
