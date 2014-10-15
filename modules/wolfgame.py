@@ -1224,7 +1224,7 @@ def begin_day(cli):
     var.GUARDED = {}
 
     msg = ("De burgers moeten nu stemmen wie ze willen elimineren. "+
-           'gebruik "{0}lynch <nick>" om je stem door te geven. {1} stemmen '+
+           'gebruik "{0}hang <nick>" om je stem door te geven. {1} stemmen '+
            'zijn nodig om iemand te elimineren.').format(botconfig.CMD_CHAR, len(var.list_players()) // 2 + 1)
     cli.msg(chan, msg)
     var.LOGGER.logMessage(msg)
@@ -1425,7 +1425,7 @@ def chk_nightdone(cli):
 
 
 
-@cmd("lynch", "vote")
+@cmd("hang", "vote")
 def vote(cli, nick, chann_, rest):
     """Use this to vote for a candidate to be lynched"""
     chan = botconfig.CHANNEL
@@ -1522,7 +1522,7 @@ def retract(cli, nick, chann_, rest):
 
 
 
-@cmd("shoot")
+@cmd("schiet")
 def shoot(cli, nick, chann_, rest):
     """Use this to fire off a bullet at someone in the day if you have bullets"""
     
@@ -1637,7 +1637,7 @@ def shoot(cli, nick, chann_, rest):
 
 
 
-@pmcmd("kill")
+@pmcmd("dood")
 def kill(cli, nick, rest):
     if var.PHASE in ("geen", "join"):
         cli.notice(nick, "Er is geen spel bezig.")
@@ -1692,7 +1692,7 @@ def kill(cli, nick, rest):
     chk_nightdone(cli)
 
 
-@pmcmd("guard", "protect", "save")
+@pmcmd("bescherm", "protect", "save")
 def guard(cli, nick, rest):
     if var.PHASE in ("geen", "join"):
         cli.notice(nick, "Er is geen spel bezig.")
@@ -1741,7 +1741,7 @@ def guard(cli, nick, rest):
 
 
 
-@pmcmd("observe")
+@pmcmd("observeer")
 def observe(cli, nick, rest):
     if var.PHASE in ("geen", "join"):
         cli.notice(nick, "Er is geen spel bezig.")
@@ -1843,7 +1843,7 @@ def investigate(cli, nick, rest):
 
 
 
-@pmcmd("visit")
+@pmcmd("bezoek")
 def hvisit(cli, nick, rest):
     if var.PHASE in ("geen", "join"):
         cli.notice(nick, "Er is geen spel bezig.")
@@ -1897,7 +1897,7 @@ def is_fake_nick(who):
 
 
 
-@pmcmd("see")
+@pmcmd("zie")
 def see(cli, nick, rest):
     if var.PHASE in ("geen", "join"):
         cli.notice(nick, "Er is geen spel bezig.")
@@ -2061,16 +2061,16 @@ def transition_night(cli):
         if normal_notify:
             if wolf in var.ROLES["wolf"]:
                 pm(cli, wolf, ('Jij bent een \u0002wolf\u0002. het is aan jou om alle burgers '+
-                               'te doden. gebruik "kill <nick>" om een burger te doden.'))
+                               'te doden. gebruik "dood <nick>" om een burger te doden.'))
             elif wolf in var.ROLES["verrader"]:
                 pm(cli, wolf, ('Jij bent een \u0002verrader\u0002. Je bent net als elke andere '+
                                'burger en zelfs een ziener kan jij ware identiteit zien. '+
                                'Alleen rechercheurs kan. '))
             else:
                 pm(cli, wolf, ('Je bent een \u0002c\u0002. In de nacht kun je vliegen. '+
-                               'Gebruik "kill <nick>" om een burger te doden. Daarnaast, kun '+
-                               'je "observe <nick>" gebruiken om te zien of iemand in bed is of niet. '+
-                               'Observeren (observe) be schermt je tegen deelname bij het doden.'))
+                               'Gebruik "dood <nick>" om een burger te doden. Daarnaast, kun '+
+                               'je "observeer <nick>" gebruiken om te zien of iemand in bed is of niet. '+
+                               'Observeren (observeer) be schermt je tegen deelname bij het doden.'))
             if len(wolves) > 1:
                 pm(cli, wolf, 'Oh ja, Als je mij een prive bericht stuurd, stuur ik die door naar de wolven.')
         else:
@@ -2098,7 +2098,7 @@ def transition_night(cli):
             pm(cli, seer, ('Jij bent een \u0002ziener\u0002. '+
                           'Het is je werk om de wolf te vinden, je '+
                           'kan één visioen per nacht hebben. '+
-                          'Gebruik "see <nick>" om de rol van een speler te zien.'))
+                          'Gebruik "zie <nick>" om de rol van een speler te zien.'))
         else:
             pm(cli, seer, "Je bent een \02ziener\02.")  # !simple
         pm(cli, seer, "Spelers: "+", ".join(pl))
@@ -2111,7 +2111,7 @@ def transition_night(cli):
             cli.msg(harlot, ('Je bent een \u0002onschuldige meisje\u0002. '+
                              'Je brengt de nacht door met één persoon per ronde. '+
                              'Als je een slachtoffer van een wolf of een wolf bezoekt, '+
-                             'wordt je gedood. Gebruik "visit <nick>" om een speler te bezoeken.'))
+                             'wordt je gedood. Gebruik "bezoek <nick>" om een speler te bezoeken.'))
         else:
             cli.notice(harlot, "Jij bent een \02onschuldige meisje\02.")  # !simple
         pm(cli, harlot, "Spelers: "+", ".join(pl))
@@ -2124,7 +2124,7 @@ def transition_night(cli):
             cli.msg(g_angel, ('Jij bent een \u0002bescherm engel\u0002. '+
                               'Het is je werk om burgers te beschermen. Als je een wolf '+
                               'beschermd, is er een 50/50 kans dat je overlijdt, als je een slachtoffer '+
-                              'beschermd, blijven ze leven. Gebruik "guard <nick>" om een speler te beschermen.'))
+                              'beschermd, blijven ze leven. Gebruik "bescherm <nick>" om een speler te beschermen.'))
         else:
             cli.notice(g_angel, "Je bent een \02bescherm engel\02.")  # !simple
         pm(cli, g_angel, "Spelers: " + ", ".join(pl))
@@ -2157,7 +2157,8 @@ def transition_night(cli):
         if norm_notify:
             gun_msg =  ("Jij hebt een geweer met zilveren kogels. Je kunt hem alleen "+
                         "overdag gebruiken. Als je op een wolf schiet, hij/zij zal direct sterven, maar schiet "+
-                        "je een burger, de burger zal het waarschijnlijk overleven. Je hebt {0}.")
+                        "je een burger, de burger zal het waarschijnlijk overleven. Gebruik !schiet <naam> om "+
+			"iemand neer te schieten. Je hebt {0}.")
         else:
             gun_msg = ("Je hebt een \02geweer\02 met {0}.")
         if var.GUNNERS[g] == 1:
