@@ -2063,14 +2063,14 @@ def transition_night(cli):
                 pm(cli, wolf, ('Jij bent een \u0002wolf\u0002. het is aan jou om alle burgers '+
                                'te doden. gebruik "dood <nick>" om een burger te doden.'))
             elif wolf in var.ROLES["verrader"]:
-                pm(cli, wolf, ('Jij bent een \u0002verrader\u0002. Je bent net als elke andere '+
-                               'burger en zelfs een ziener kan jij ware identiteit zien. '+
-                               'Alleen rechercheurs kan. '))
+                pm(cli, wolf, ('Jij bent een \u0002verrader\u0002. Iedereen ziet je als een burger. '+
+                               'Zelfs een ziener kan jouw ware identiteit niet zien. '+
+                               'Alleen een rechercheur kan dat. '))
             else:
                 pm(cli, wolf, ('Je bent een \u0002c\u0002. In de nacht kun je vliegen. '+
                                'Gebruik "dood <nick>" om een burger te doden. Daarnaast, kun '+
                                'je "observeer <nick>" gebruiken om te zien of iemand in bed is of niet. '+
-                               'Observeren (observeer) be schermt je tegen deelname bij het doden.'))
+                               'Observeren (observeer) sluit je uit van deelname bij het doden.'))
             if len(wolves) > 1:
                 pm(cli, wolf, 'Oh ja, Als je mij een prive bericht stuurd, stuur ik die door naar de wolven.')
         else:
