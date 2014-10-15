@@ -844,7 +844,7 @@ def chk_win(cli):
           not var.ROLES["verrader"] and
           not var.ROLES["weerkraai"]):
         cli.msg(chan, ("Game over! Alle wolven zijn dood! De burgers "+
-                       "filleren ze, BBQ ze, en hebben een stevige maaltijd."))
+                       "fileren ze, BBQ ze, en hebben een stevige maaltijd."))
         var.LOGGER.logMessage(("Game over! Alle wolven zijn dood! De burgers "+
                                "filleren ze, BBQ ze, en hebben een stevige maaltijd."))
         village_win = True
@@ -973,13 +973,13 @@ def reaper(cli, gameid):
                 pl = var.list_players()
                 x = [a for a in to_warn if a in pl]
                 if x:
-                    cli.msg(chan, ("{0}: \u0002Je Bent Idle voor een tijdje. "+
-                                   "Doe actief mee of je word binnenkort "+
+                    cli.msg(chan, ("{0}: \u0002Je hebt al een tijdje niets gezegd. "+
+                                   "Doe actief mee of je wordt binnenkort "+
                                    "dood verklaard.\u0002").format(", ".join(x)))
             for dcedplayer in list(var.DISCONNECTED.keys()):
                 _, timeofdc, what = var.DISCONNECTED[dcedplayer]
                 if what == "quit" and (datetime.now() - timeofdc) > timedelta(seconds=var.QUIT_GRACE_TIME):
-                    cli.msg(chan, ("\02{0}\02 is gestorven door een fatale aanvan van wilde dieren. "+
+                    cli.msg(chan, ("\02{0}\02 is gestorven door een fatale aanval van wilde dieren. "+
                                    "Hij/zij was een \02{1}\02.").format(dcedplayer, var.get_role(dcedplayer)))
                     if not del_player(cli, dcedplayer, devoice = False):
                         return
@@ -1036,7 +1036,7 @@ def goat(cli, nick, chan, rest):
         cli.notice(nick, "Dat kun je alleen overdag doen.")
         return
     if var.GOATED:
-        cli.notice(nick, "Je kunt dat maar een keer per dag doen.")
+        cli.notice(nick, "Je kunt dat maar 1 keer per dag doen.")
         return
     ul = list(var.USERS.keys())
     ull = [x.lower() for x in ul]
@@ -1145,7 +1145,7 @@ def on_nick(cli, prefix, nick):
                     cli.mode(chan, "+v", nick, nick+"!*@*")
                     del var.DISCONNECTED[nick]
                     
-                    cli.msg(chan, ("\02{0}\02 is terug gekeerd naar "+
+                    cli.msg(chan, ("\02{0}\02 is teruggekeerd naar "+
                                    "het dorp.").format(nick))
 
 def leave(cli, what, nick, why=""):
@@ -1173,13 +1173,13 @@ def leave(cli, what, nick, why=""):
         msg = ("\02{0}\02 is gestorven door het eten van giftige bessen. "+
                "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick))
     elif what == "quit" and (not var.QUIT_GRACE_TIME or var.PHASE == "join"):
-        msg = ("\02{0}\02 is gestorven door een fatale aan van van wilde dieren. "+
+        msg = ("\02{0}\02 is gestorven door een fatale aanval van wilde dieren. "+
                "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick))
     elif what != "kick":
         msg = "\u0002{0}\u0002 is vermist.".format(nick)
         killhim = False
     else:
-        msg = ("\02{0}\02 is gestorven door van een klif te vallen. "+
+        msg = ("\02{0}\02 is gestorven door van een klif af te vallen. "+
                "Hij/zij was een \02{1}\02.").format(nick, var.get_role(nick))
     cli.msg(botconfig.CHANNEL, msg)
     var.LOGGER.logMessage(msg.replace("\02", ""))
@@ -1245,9 +1245,9 @@ def night_warn(cli, gameid):
         return
         
     cli.msg(botconfig.CHANNEL, ("\02A De burgers worden wakker en het valt ze op " +
-                                "dat het buiten nogsteeds donker is. " +
+                                "dat het buiten nog steeds donker is. " +
                                 "De nacht is bijna voorbij en er zijn " +
-                                "nogsteeds geluiden te horen in het dorp.\02"))
+                                "nog steeds geluiden te horen in het dorp.\02"))
 
 def transition_day(cli, gameid=0):
     if gameid:
@@ -1392,7 +1392,7 @@ def transition_day(cli, gameid=0):
         mmsg = ("tijdens het zoeken naar {2}'s eigendommen, Je vond " + 
                 "een geweer geladen met {0} zilveren kogel{1}! " + 
                 "Je kunt deze alleen overdag gebruiken. " +
-                "Als je een wolf raakt, kan het zijn dat je hem perongeluk zal missen. " +
+                "Als je een wolf raakt, kan het zijn dat je hem per ongeluk zal missen. " +
                 "Als je een burger raakt, zal het waarschijnlijk zijn dat deze gewond raakt.")
         if numbullets == 1:
             mmsg = mmsg.format(numbullets, "", victim)
@@ -1477,7 +1477,7 @@ def vote(cli, nick, chann_, rest):
         var.VOTES[voted] = [nick]
     else:
         var.VOTES[voted].append(nick)
-    cli.msg(chan, ("\u0002{0}\u0002 stemmen voor "+
+    cli.msg(chan, ("\u0002{0}\u0002 stemt voor "+
                    "\u0002{1}\u0002.").format(nick, voted))
     var.LOGGER.logMessage("{0} stemmen voor {1}.".format(nick, voted))
     var.LOGGER.logBare(voted, "VOTED", nick)
@@ -1661,7 +1661,7 @@ def kill(cli, nick, rest):
     if role == "weerkraai":  # Check if flying to observe
         if var.OBSERVED.get(nick):
             pm(cli, nick, ("Je bent al in een weerkraai veranderd; En daarom, "+
-                           "ben je physiek niet in staat burgers te doden."))
+                           "ben je fysiek niet in staat burgers te doden."))
             return
     pl = var.list_players()
     pll = [x.lower() for x in pl]
@@ -1681,7 +1681,7 @@ def kill(cli, nick, rest):
     
     victim = pl[pll.index(target)]
     if victim == nick:
-        pm(cli, nick, "Zelfmoord is slecht. Doe het niet.")
+        pm(cli, nick, "Zelfmoord is slecht. Doe het niet!")
         return
     if victim in var.ROLES["wolf"]+var.ROLES["weerkraai"]:
         pm(cli, nick, "Je mag allen burgers doden, niet de andere wolven.")
@@ -1775,7 +1775,7 @@ def observe(cli, nick, rest):
             return
     victim = pl[pll.index(target)]
     if victim == nick.lower():
-        pm(cli, nick, "Misschien moet je, inplaats van dit, iemand vermoorden.")
+        pm(cli, nick, "Misschien moet je in plaats van dit, iemand vermoorden.")
         return
     if nick in var.OBSERVED.keys():
         pm(cli, nick, "Je vliegt al naar \02{0}\02's huis.".format(var.OBSERVED[nick]))
@@ -2273,9 +2273,9 @@ def start(cli, nick, chann_, rest):
             
     if var.ADMIN_TO_PING:
         if "join" in COMMANDS.keys():
-            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
+            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "Dit commando is uitgeschakeld door een administrator.")]
         if "start" in COMMANDS.keys():
-            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
+            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "Dit commando is uitgeschakeld door een administrator.")]
 
     var.ROLES = {}
     var.CURSED = []
@@ -2404,7 +2404,7 @@ def wait(cli, nick, chann_, rest):
         cli.notice(nick, "Er is geen spel bezig.")
         return
     if var.PHASE != "join":
-        cli.notice(nick, "Werewolf is already in play.")
+        cli.notice(nick, "Weerwolven van Wakkerdam is al bezig..")
         return
     if nick not in pl:
         cli.notice(nick, "Je speelt nu niet mee.")
@@ -2613,7 +2613,7 @@ def coin(cli, nick, chan, rest):
     
     cli.msg(chan, "\2{0}\2 gooit een munt in de lucht...".format(nick))
     var.LOGGER.logMessage("{0} gooit een munt in de lucht...".format(nick))
-    cmsg = "De munt land op \2{0}\2.".format("kop" if random.random() < 0.5 else "munt")
+    cmsg = "De munt valt op \2{0}\2.".format("kop" if random.random() < 0.5 else "munt")
     cli.msg(chan, cmsg)
     var.LOGGER.logMessage(cmsg)
     
@@ -2672,9 +2672,9 @@ def flastgame(cli, nick, rest):
     chan = botconfig.CHANNEL
     if var.PHASE != "join":
         if "join" in COMMANDS.keys():
-            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
+            COMMANDS["join"] = [lambda *spam: cli.msg(chan, "Dit commando is uitgeschakeld door een administrator.")]
         if "start" in COMMANDS.keys():
-            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "Dit commanda is uitgeschakeld door een administrator.")]
+            COMMANDS["start"] = [lambda *spam: cli.msg(chan, "Dit commando is uitgeschakeld door een administrator.")]
         
     cli.msg(chan, "Een nieuw spel starten is uitgeschakeld door \02{0}\02.".format(nick))
     var.ADMIN_TO_PING = nick
