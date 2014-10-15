@@ -773,7 +773,7 @@ def stop_game(cli, winner = ""):
             continue  # not logged in during game start
         # determine if this player's team won
         if plr in (var.ORIGINAL_ROLES["wolf"] + var.ORIGINAL_ROLES["verrader"] +
-                   var.ORIGINAL_ROLES["weerweerkraai"]):  # the player was wolf-aligned
+                   var.ORIGINAL_ROLES["weerkraai"]):  # the player was wolf-aligned
             if winner == "wolven":
                 won = True
             elif winner == "burgers":
@@ -821,7 +821,7 @@ def chk_win(cli):
         
     lwolves = (len(var.ROLES["wolf"])+
                len(var.ROLES["verrader"])+
-               len(var.ROLES["weerweerkraai"]))
+               len(var.ROLES["weerkraai"]))
     if var.PHASE == "day":
         lpl -= len([x for x in var.WOUNDED if x not in var.ROLES["verrader"]])
         lwolves -= len([x for x in var.WOUNDED if x in var.ROLES["verrader"]])
@@ -842,7 +842,7 @@ def chk_win(cli):
         var.LOGGER.logBare("WOLVEN", "WIN")
     elif (not var.ROLES["wolf"] and
           not var.ROLES["verrader"] and
-          not var.ROLES["weerweerkraai"]):
+          not var.ROLES["weerkraai"]):
         cli.msg(chan, ("Game over! Alle wolven zijn dood! De burgers "+
                        "filleren ze, BBQ ze, en hebben een stevige maaltijd."))
         var.LOGGER.logMessage(("Game over! Alle wolven zijn dood! De burgers "+
@@ -850,7 +850,7 @@ def chk_win(cli):
         village_win = True
         var.LOGGER.logBare("BURGERS", "WIN")
     elif (not var.ROLES["wolf"] and not 
-          var.ROLES["weerweerkraai"] and var.ROLES["verrader"]):
+          var.ROLES["weerkraai"] and var.ROLES["verrader"]):
         for t in var.ROLES["verrader"]:
             var.LOGGER.logBare(t, "TRANSFORM")
         chk_traitor(cli)
@@ -1271,7 +1271,7 @@ def transition_day(cli, gameid=0):
     if (not len(var.SEEN)+len(var.KILLS)+len(var.OBSERVED) # neither seer nor wolf acted
             and var.FIRST_NIGHT and var.ROLES["ziener"] and not botconfig.DEBUG_MODE):
         cli.msg(botconfig.CHANNEL, "\02De wolven zijn allemaal gestorven door een onbekende ziekte.\02")
-        for x in var.ROLES["wolf"]+var.ROLES["weerweerkraai"]+var.ROLES["verrader"]:
+        for x in var.ROLES["wolf"]+var.ROLES["weerkraai"]+var.ROLES["verrader"]:
             if not del_player(cli, x, True):
                 return
     
@@ -1309,7 +1309,7 @@ def transition_day(cli, gameid=0):
                "De burgers worden wakker, dankbaar dat ze de nacht hebben overleeft, "+
                "en doorzoeken het dorp... ").format(min, sec)]
     dead = []
-    crowonly = var.ROLES["weerweerkraai"] and not var.ROLES["wolf"]
+    crowonly = var.ROLES["weerkraai"] and not var.ROLES["wolf"]
     if victim:
         var.LOGGER.logBare(victim, "WOLVESVICTIM", *[y for x,y in var.KILLS.items() if x == victim])
     for crow, target in iter(var.OBSERVED.items()):
@@ -1340,7 +1340,7 @@ def transition_day(cli, gameid=0):
         var.LOGGER.logBare(victim, "KILLED")
     if victim in var.GUNNERS.keys() and var.GUNNERS[victim]:  # victim had bullets!
         if random.random() < var.GUNNER_KILLS_WOLF_AT_NIGHT_CHANCE:
-            wc = var.ROLES["weerweerkraai"]
+            wc = var.ROLES["weerkraai"]
             for crow in wc:
                 if crow in var.OBSERVED.keys():
                     wc.remove(crow)
@@ -1358,13 +1358,13 @@ def transition_day(cli, gameid=0):
                                 "nu gestorven.").format(hlt))
                 dead.append(hlt)
     for harlot in var.ROLES["onschuldige meisje"]:
-        if var.HVISITED.get(harlot) in var.ROLES["wolf"]+var.ROLES["weerweerkraai"]:
+        if var.HVISITED.get(harlot) in var.ROLES["wolf"]+var.ROLES["weerkraai"]:
             message.append(("\02{0}\02, een \02onschuldige meisje\02, maakte de verkeerde beslissing door "+
                                 "afgelopen nacht het huis van de wolf te bezoeken en is "+
                                 "nu gestorven.").format(harlot))
             dead.append(harlot)
     for gangel in var.ROLES["bescherm engel"]:
-        if var.GUARDED.get(gangel) in var.ROLES["wolf"]+var.ROLES["weerweerkraai"]:
+        if var.GUARDED.get(gangel) in var.ROLES["wolf"]+var.ROLES["weerkraai"]:
             if victim == gangel:
                 continue # already dead.
             r = random.random()
@@ -1385,7 +1385,7 @@ def transition_day(cli, gameid=0):
     if (var.WOLF_STEALS_GUN and victim in dead and 
         victim in var.GUNNERS.keys() and var.GUNNERS[victim] > 0):
         # victim has bullets
-        guntaker = random.choice(var.ROLES["wolf"] + var.ROLES["weerweerkraai"] 
+        guntaker = random.choice(var.ROLES["wolf"] + var.ROLES["weerkraai"] 
                                  + var.ROLES["verrader"])  # random looter
         numbullets = var.GUNNERS[victim]
         var.WOLF_GUNNERS[guntaker] = numbullets  # transfer bullets to him/her
@@ -1409,7 +1409,7 @@ def chk_nightdone(cli):
     if (len(var.SEEN) == len(var.ROLES["ziener"]) and  # Seers have seen.
         len(var.HVISITED.keys()) == len(var.ROLES["onschuldige meisje"]) and  # harlots have visited.
         len(var.GUARDED.keys()) == len(var.ROLES["bescherm engel"]) and  # guardians have guarded
-        len(var.ROLES["weerweerkraai"]+var.ROLES["wolf"]) == len(var.KILLS)+len(var.OBSERVED) and
+        len(var.ROLES["weerkraai"]+var.ROLES["wolf"]) == len(var.KILLS)+len(var.OBSERVED) and
         var.PHASE == "nacht"):
         
         # check if wolves are actually agreeing
@@ -1568,7 +1568,7 @@ def shoot(cli, nick, chann_, rest):
         cli.notice(nick, "Je houd het geweer verkeerdom vast.")
         return
     
-    wolfshooter = nick in var.ROLES["wolf"]+var.ROLES["weerweerkraai"]+var.ROLES["verrader"]
+    wolfshooter = nick in var.ROLES["wolf"]+var.ROLES["weerkraai"]+var.ROLES["verrader"]
     
     if wolfshooter and nick in var.WOLF_GUNNERS:
         var.WOLF_GUNNERS[nick] -= 1
@@ -1581,7 +1581,7 @@ def shoot(cli, nick, chann_, rest):
     else:
         chances = var.GUN_CHANCES
     
-    wolfvictim = victim in var.ROLES["wolf"]+var.ROLES["weerweerkraai"]
+    wolfvictim = victim in var.ROLES["wolf"]+var.ROLES["weerkraai"]
     if rand <= chances[0] and not (wolfshooter and wolfvictim):  # didn't miss or suicide
         # and it's not a wolf shooting another wolf
         
@@ -1589,7 +1589,7 @@ def shoot(cli, nick, chann_, rest):
                        "een zilveren kogel").format(nick, victim))
         var.LOGGER.logMessage("{0} schiet op {1} met een zilveren kogel!".format(nick, victim))
         victimrole = var.get_role(victim)
-        if victimrole in ("wolf", "weerweerkraai"):
+        if victimrole in ("wolf", "weerkraai"):
             cli.msg(chan, ("\u0002{0}\u0002 is een wolf, en is gedood door "+
                            "een zilveren kogel.").format(victim))
             var.LOGGER.logMessage(("{0} is een wolf,en is gedood door "+
@@ -1648,7 +1648,7 @@ def kill(cli, nick, rest):
     role = var.get_role(nick)
     if role == "verrader":
         return  # they do this a lot.
-    if role not in ('wolf', 'weerweerkraai'):
+    if role not in ('wolf', 'weerkraai'):
         pm(cli, nick, "Alleen een wolf mag dit commando gebruiken.")
         return
     if var.PHASE != "nacht":
@@ -1658,9 +1658,9 @@ def kill(cli, nick, rest):
     if not victim:
         pm(cli, nick, "Niet genoeg parameters")
         return
-    if role == "weerweerkraai":  # Check if flying to observe
+    if role == "weerkraai":  # Check if flying to observe
         if var.OBSERVED.get(nick):
-            pm(cli, nick, ("Je bent al in een weerweerkraai veranderd; En daarom, "+
+            pm(cli, nick, ("Je bent al in een weerkraai veranderd; En daarom, "+
                            "ben je physiek niet in staat burgers te doden."))
             return
     pl = var.list_players()
@@ -1683,7 +1683,7 @@ def kill(cli, nick, rest):
     if victim == nick:
         pm(cli, nick, "Zelfmoord is slecht. Doe het niet.")
         return
-    if victim in var.ROLES["wolf"]+var.ROLES["weerweerkraai"]:
+    if victim in var.ROLES["wolf"]+var.ROLES["weerkraai"]:
         pm(cli, nick, "Je mag allen burgers doden, niet de andere wolven.")
         return
     var.KILLS[nick] = victim
@@ -1749,11 +1749,11 @@ def observe(cli, nick, rest):
     elif nick not in var.list_players() or nick in var.DISCONNECTED.keys():
         cli.notice(nick, "Jij doet nu niet mee aan het spel.")
         return
-    if not var.is_role(nick, "weerweerkraai"):
-        pm(cli, nick, "Alleen een weerweerkraai kan dit commando gebruiken.")
+    if not var.is_role(nick, "weerkraai"):
+        pm(cli, nick, "Alleen een weerkraai kan dit commando gebruiken.")
         return
     if var.PHASE != "nacht":
-        pm(cli, nick, "Je kunt alleen 's nachts in een weerweerkraai veranderen.")
+        pm(cli, nick, "Je kunt alleen 's nachts in een weerkraai veranderen.")
         return
     victim = re.split(" +", rest)[0].strip().lower()
     if not victim:
@@ -1780,13 +1780,13 @@ def observe(cli, nick, rest):
     if nick in var.OBSERVED.keys():
         pm(cli, nick, "Je vliegt al naar \02{0}\02's huis.".format(var.OBSERVED[nick]))
         return
-    if var.get_role(victim) in ("weerweerkraai", "verrader", "wolf"):
+    if var.get_role(victim) in ("weerkraai", "verrader", "wolf"):
         pm(cli, nick, "Naar een huis van een andere wolf vliegen is verspilling van je tijd.")
         return
     var.OBSERVED[nick] = victim
     if nick in var.KILLS.keys():
         del var.KILLS[nick]
-    pm(cli, nick, ("Je bent in een grote weerweerkraai veranderd enje begint te vliegen "+
+    pm(cli, nick, ("Je bent in een grote weerkraai veranderd enje begint te vliegen "+
                    "naarr \u0002{0}'s\u0002 huis. Je keert terug wanneer "+
                   "je goed hebt rondgekeken en de dag begint.").format(victim))
     var.LOGGER.logBare(victim, "OBSERVED", nick)
@@ -1836,7 +1836,7 @@ def investigate(cli, nick, rest):
     var.LOGGER.logBare(victim, "INVESTIGATED", nick)
     if random.random() < var.rechercheur_REVEALED_CHANCE:  # a 2/5 chance (should be changeable in settings)
         # Reveal his role!
-        for badguy in var.ROLES["wolf"] + var.ROLES["weerweerkraai"] + var.ROLES["verrader"]:
+        for badguy in var.ROLES["wolf"] + var.ROLES["weerkraai"] + var.ROLES["verrader"]:
             pm(cli, badguy, ("\u0002{0}\u0002 heeft perongeluk een papier laten vallen. Hier op staat "+
                             "dat hij/zij een rechercheur is!").format(nick))
         var.LOGGER.logBare(nick, "PAPERDROP")
