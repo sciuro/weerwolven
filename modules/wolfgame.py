@@ -381,7 +381,7 @@ def join(cli, nick, chann_, rest):
         var.CAN_START_TIME = datetime.now() + timedelta(seconds=var.MINIMUM_WAIT)
         cli.msg(chan, ('\u0002{0}\u0002 heeft Weerwolven van Wakkerdam gestart. '+
                       'Tik "{1}join" voor deelname. Tik "{1}start" Om het spel te starten. '+
-                      'Tik "{1}wait" om de tijd voor deelname te verlengen.').format(nick, botconfig.CMD_CHAR))
+                      'Tik "{1}wacht" om de tijd voor deelname te verlengen.').format(nick, botconfig.CMD_CHAR))
     elif nick in pl:
         cli.notice(nick, "Je speelt al mee!")
     elif len(pl) >= var.MAX_PLAYERS:
@@ -2392,7 +2392,7 @@ def on_error(cli, pfx, msg):
     
 
 
-@cmd("wait")
+@cmd("wacht")
 def wait(cli, nick, chann_, rest):
     """Increase the wait time (before !start can be used)"""
     pl = var.list_players()
