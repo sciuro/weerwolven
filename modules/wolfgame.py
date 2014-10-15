@@ -2158,7 +2158,7 @@ def transition_night(cli):
             gun_msg =  ("Jij hebt een geweer met zilveren kogels. Je kunt hem alleen "+
                         "overdag gebruiken. Als je op een wolf schiet, hij/zij zal direct sterven, maar schiet "+
                         "je een burger, de burger zal het waarschijnlijk overleven. Gebruik !schiet <naam> om "+
-			"iemand neer te schieten. Je hebt {0}.")
+			"iemand neer te schieten. Dit moet je in het algemene kanaal doen. Je hebt {0}.")
         else:
             gun_msg = ("Je hebt een \02geweer\02 met {0}.")
         if var.GUNNERS[g] == 1:
@@ -2382,7 +2382,7 @@ def start(cli, nick, chann_, rest):
     reapertimer.daemon = True
     reapertimer.start()
 
-    
+    stats(cli, chan, chan, rest)
     
 @hook("error")
 def on_error(cli, pfx, msg):
