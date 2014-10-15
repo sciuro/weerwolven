@@ -1244,7 +1244,7 @@ def night_warn(cli, gameid):
     if var.PHASE == "day":
         return
         
-    cli.msg(botconfig.CHANNEL, ("\02A De burgers worden wakker en het valt ze op " +
+    cli.msg(botconfig.CHANNEL, ("\02 De burgers worden wakker en het valt ze op " +
                                 "dat het buiten nog steeds donker is. " +
                                 "De nacht is bijna voorbij en er zijn " +
                                 "nog steeds geluiden te horen in het dorp.\02"))
