@@ -68,8 +68,8 @@ INDEX_OF_ROLE = dict((v,k) for k,v in ROLE_INDICES.items())
 NO_VICTIMS_MESSAGES = ("Het lichaam van een jonge huisdier is gevonden.",
                        "Een plas van bloed en wolfpoot afdrukken zijn gevonden.",
                        "Een pluk van wolvenhaar is gevonden.")
-LYNCH_MESSAGES = ("De burgers hebben, na lang overleg, besloten te elmineren \u0002{0}\u0002, hij/zij was een... \u0002{1}\u0002.",
-                  "Onder veel lawaai, de woedende burgers elimineren \u0002{0}\u0002, hij/zij was een... \u0002{1}\u0002.",
+LYNCH_MESSAGES = ("De burgers hebben, na lang overleg, besloten om \u0002{0}\u0002 te elimineren. Hij/zij was een... \u0002{1}\u0002.",
+                  "Onder veel lawaai hebben de woedende burgers \u0002{0}\u0002 geelimineerd. Hij/zij was een... \u0002{1}\u0002.",
                   "De menigte sleept een protesterende \u0002{0}\u0002 naar de galg. Hij/zij bezwijkt aan de wil van de groep, en wordt opgehangen. Hij/zij was een \u0002{1}\u0002.",
                   "Verslagen door zijn/haar lot, is \u0002{0}\u0002 naar de galg geleid. Na de dood bleek hij/zij een \u0002{1}\u0002 te zijn.")
 
