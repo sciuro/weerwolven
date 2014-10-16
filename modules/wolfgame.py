@@ -1023,7 +1023,7 @@ def on_join(cli, raw_nick, chan, acc="*", rname=""):
                 if nick in var.DCED_PLAYERS.keys():
                     var.PLAYERS[nick] = var.DCED_PLAYERS.pop(nick)
 
-@cmd("goat")
+@cmd("goat", "geit")
 def goat(cli, nick, chan, rest):
     """Use a goat to interact with anyone in the channel during the day"""
     if var.PHASE in ("geen", "join"):
@@ -1194,7 +1194,7 @@ hook("quit")(lambda cli, nick, *rest: leave(cli, "quit", nick, rest[0]))
 hook("kick")(lambda cli, nick, *rest: leave(cli, "kick", rest[1]))
 
 
-@cmd("quit", "leave")
+@cmd("quit", "leave", "stop")
 def leave_game(cli, nick, chan, rest):
     """Quits the game."""
     if var.PHASE == "geen":
@@ -2473,11 +2473,11 @@ def reset_game(cli, nick, chan, rest):
         reset(cli)
 
 
-@pmcmd("rules")
+@pmcmd("rules", "regels")
 def pm_rules(cli, nick, rest):
     cli.notice(nick, var.RULES)
 
-@cmd("rules")
+@cmd("rules", "regels")
 def show_rules(cli, nick, chan, rest):
     """Displays the rules"""
     if var.PHASE in ("dag", "nacht") and nick not in var.list_players():
@@ -2604,7 +2604,7 @@ def show_admins(cli, nick, chan, rest):
 
 
 
-@cmd("coin")
+@cmd("coin", "muntje")
 def coin(cli, nick, chan, rest):
     """It's a bad idea to base any decisions on this command."""
     
