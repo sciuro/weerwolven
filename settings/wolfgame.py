@@ -19,8 +19,8 @@ PART_GRACE_TIME = 7
 QUIT_GRACE_TIME = 30
 MAX_PRIVMSG_TARGETS = 1
 
-LOG_FILENAME = ""
-BARE_LOG_FILENAME = ""
+LOG_FILENAME = "wolfbot.log"
+BARE_LOG_FILENAME = "wolfbot_bare.log"
 
                     #       HIT    MISS    SUICIDE
 GUN_CHANCES         =   (   5/7  ,  1/7  ,   1/7   )
@@ -39,7 +39,7 @@ ROLES_GUIDE = {    4    : (   1   ,   1   ,   0   ,   0   ,   0   ,    0   ,   0
                    8    : (   1   ,   2   ,   1   ,   0   ,   1   ,    1   ,   1   ,   0    ,   0   ,   0   ), ##
                    10   : (   1   ,   2   ,   1   ,   0   ,   1   ,    1   ,   1   ,   0    ,   1   ,   0   ), ##
                    11   : (   1   ,   2   ,   1   ,   0   ,   1   ,    1   ,   1   ,   0    ,   1   ,   0   ), ##
-                   15   : (   1   ,   3   ,   1   ,   0   ,   1   ,    1   ,   1   ,   1    ,   1   ,   1   ), ##
+                   15   : (   1   ,   3   ,   1   ,   0   ,   1   ,    1   ,   1   ,   1    ,   1   ,   0   ), ##
                    22   : (   1   ,   4   ,   1   ,   0   ,   1   ,    1   ,   1   ,   1    ,   1   ,   1   ), ##
                    29   : (   1   ,   5   ,   1   ,   0   ,   1   ,    1   ,   1   ,   1    ,   1   ,   1   ), ##
                    None : (   0   ,   0   ,   0   ,   0   ,   0   ,    0   ,   0   ,   0    ,   0   ,   0   )} ##
