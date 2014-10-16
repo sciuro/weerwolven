@@ -275,8 +275,8 @@ def pinger(cli, nick, chan, rest):
     cli.who(botconfig.CHANNEL)
 
 
-@cmd("simple", raw_nick = True)
-@pmcmd("simple", raw_nick = True)
+@cmd("simpel", raw_nick = True)
+@pmcmd("simpel", raw_nick = True)
 def mark_simple_notify(cli, nick, *rest):
     """If you want the bot to NOTICE you for every interaction"""
     
@@ -1023,7 +1023,7 @@ def on_join(cli, raw_nick, chan, acc="*", rname=""):
                 if nick in var.DCED_PLAYERS.keys():
                     var.PLAYERS[nick] = var.DCED_PLAYERS.pop(nick)
 
-@cmd("goat", "geit")
+@cmd("geit", "goat")
 def goat(cli, nick, chan, rest):
     """Use a goat to interact with anyone in the channel during the day"""
     if var.PHASE in ("geen", "join"):
@@ -1194,7 +1194,7 @@ hook("quit")(lambda cli, nick, *rest: leave(cli, "quit", nick, rest[0]))
 hook("kick")(lambda cli, nick, *rest: leave(cli, "kick", rest[1]))
 
 
-@cmd("quit", "leave", "stop")
+@cmd("stop", "quit", "leave")
 def leave_game(cli, nick, chan, rest):
     """Quits the game."""
     if var.PHASE == "geen":
@@ -1488,7 +1488,7 @@ def vote(cli, nick, chann_, rest):
 
 
 
-@cmd("retract")
+@cmd("trekterug", "retract")
 def retract(cli, nick, chann_, rest):
     """Takes back your vote during the day (for whom to lynch)"""
     
@@ -2473,7 +2473,7 @@ def reset_game(cli, nick, chan, rest):
         reset(cli)
 
 
-@pmcmd("rules", "regels")
+@pmcmd("regels", "rules")
 def pm_rules(cli, nick, rest):
     cli.notice(nick, var.RULES)
 
@@ -2604,7 +2604,7 @@ def show_admins(cli, nick, chan, rest):
 
 
 
-@cmd("coin", "muntje")
+@cmd("muntje", "coin")
 def coin(cli, nick, chan, rest):
     """It's a bad idea to base any decisions on this command."""
     
